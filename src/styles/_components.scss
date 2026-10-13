@@ -1,0 +1,242 @@
+// Global building blocks matching the Figma components.
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// Primary buttons ("Get started", "Next step", "View")
+.btn-primary {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 26px;
+  font-family: $font-primary;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 30px;
+  background: $green;
+  color: $creme;
+  transition: background-color 150ms ease;
+
+  &:hover:not(:disabled) {
+    background: $green-hover;
+    color: $white;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &--creme {
+    background: $creme;
+    color: $green-text;
+
+    &:hover:not(:disabled) {
+      background: $creme-hover;
+      color: $green-text;
+    }
+  }
+
+  @include mobile {
+    font-size: 18px;
+    padding: 12px 20px;
+  }
+}
+
+// Secondary buttons with arrow ("Go to cookbook →")
+.btn-secondary {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  font-family: $font-primary;
+  font-size: 20px;
+  font-weight: 500;
+  color: $green;
+  transition: background-color 150ms ease;
+
+  img {
+    width: 24px;
+  }
+
+  &:hover {
+    background: rgba($green, 0.1);
+    border-color: $green;
+  }
+
+  &--creme {
+    color: $creme;
+
+    &:hover {
+      background: rgba($creme-hover, 0.2);
+      border-color: $creme;
+    }
+  }
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+// Tags / chips ("Quick", "Vegetarian")
+.tag {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: $radius-pill;
+  font-family: $font-primary;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22px;
+  background: rgba($green, 0.2);
+  color: $green-darkest;
+  white-space: nowrap;
+
+  &--creme {
+    background: $creme;
+    color: $green-dark;
+  }
+
+  &--likes {
+    background: rgba($green, 0.3);
+    font-family: $font-numbers;
+    font-size: 16px;
+
+    img {
+      width: 16px;
+    }
+  }
+
+  @include mobile {
+    font-size: 14px;
+    padding: 4px 10px;
+  }
+}
+
+// Radio buttons rendered as selectable tags (preferences form)
+.tag-choice {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .tag {
+    border: 1px solid transparent;
+    background: $creme;
+    color: $green-dark;
+    font-size: 20px;
+    transition: background-color 150ms ease;
+
+    @include mobile {
+      font-size: 16px;
+    }
+  }
+
+  &:hover .tag {
+    background: $creme-hover;
+  }
+
+  input:checked + .tag {
+    border-color: $green;
+    background: rgba($green, 0.2);
+    color: $green-darkest;
+  }
+
+  input:focus-visible + .tag {
+    outline: 2px solid $green-text;
+    outline-offset: 2px;
+  }
+
+  .hint {
+    font-size: 14px;
+    color: $green-dark;
+  }
+}
+
+// Pill shaped text and number inputs
+.pill-input {
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 48px;
+  background: $creme;
+  font-size: 18px;
+  outline: none;
+
+  &::placeholder {
+    color: rgba($green-darkest, 0.4);
+  }
+
+  &:focus-visible {
+    border-color: $green;
+  }
+
+  &.invalid {
+    border-color: #b3261e;
+  }
+
+  // Hide the number spinners, the design has none
+  &[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+// Pill shaped native select with the design's dropdown arrow
+.pill-select {
+  height: 36px;
+  padding: 0 26px 0 12px;
+  border: 1px solid transparent;
+  border-radius: 48px;
+  background: $creme url('/assets/icons/arrow-drop-down.svg') no-repeat right 10px center / 10px;
+  font-size: 16px;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+
+  &:focus-visible {
+    border-color: $green;
+  }
+}
+
+// Inline validation message
+.field-error {
+  font-size: 14px;
+  color: #b3261e;
+}
+
+// Visually hidden but readable by screen readers
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,24 +1,39 @@
-// Design tokens – replace with the values from the Figma design.
+// Design tokens from the Figma file "Code à Cuisine".
 
-$color-primary: #e8590c;
-$color-text: #1f2933;
-$color-text-muted: #6b7280;
-$color-background: #ffffff;
-$color-border: #e5e7eb;
-$color-error: #dc2626;
+// Colors
+$green: #396039;
+$green-hover: #055e05;
+$green-dark: #1e5515;
+$green-darkest: #10310b;
+$green-text: #008000;
+$green-light: #dbe0db;
+$green-pale: #c4d0c4;
+$green-mist: #e7ece7;
+$creme: #faf0e6;
+$creme-hover: #fae0c6;
+$creme-dark: #f6e3cf;
+$chef-1: #d7dfd7;
+$chef-2: #ffd9b3;
+$chef-3: #f6e3cf;
+$chef-4: #e7ece7;
+$white: #ffffff;
 
-$font-family-base:
-  system-ui,
-  -apple-system,
-  'Segoe UI',
-  Roboto,
-  sans-serif;
+// Typography
+$font-primary: 'Quicksand', system-ui, sans-serif;
+$font-display: 'Ubuntu', system-ui, sans-serif;
+$font-numbers: 'Mulish', system-ui, sans-serif;
 
-$space-xs: 4px;
-$space-sm: 8px;
-$space-md: 16px;
-$space-lg: 24px;
-$space-xl: 48px;
+// Radii
+$radius-sm: 8px;
+$radius-md: 16px;
+$radius-lg: 20px;
+$radius-pill: 30px;
 
-$breakpoint-mobile: 600px;
-$breakpoint-tablet: 960px;
+// Layout
+$content-max-width: 1440px;
+$page-padding-x: 54px;
+$page-padding-x-mobile: 16px;
+
+// Breakpoints (max-width)
+$bp-mobile: 600px;
+$bp-tablet: 1024px;
