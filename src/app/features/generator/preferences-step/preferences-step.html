@@ -1,0 +1,117 @@
+@if (loading()) {
+  <app-loader text="Generating" />
+}
+
+<app-menu-bar backLink="/generate" backLabel="Ingredients" />
+
+<main class="page">
+  <h1>Choose your preferences</h1>
+
+  <form class="form" (submit)="$event.preventDefault(); generate()">
+    <div class="counters">
+      <div class="counter-field">
+        <p id="portions-label">How many portions you need?</p>
+        <app-counter
+          aria-labelledby="portions-label"
+          [value]="store.preferences().portions"
+          (valueChange)="setPortions($event)"
+          [min]="portionLimits.min"
+          [max]="portionLimits.max"
+          singular="Portion"
+          plural="Portions"
+        />
+      </div>
+      <div class="counter-field">
+        <p id="cooks-label">How many are cooking?</p>
+        <app-counter
+          aria-labelledby="cooks-label"
+          [value]="store.preferences().cooks"
+          (valueChange)="setCooks($event)"
+          [min]="cookLimits.min"
+          [max]="cookLimits.max"
+          singular="Person"
+          plural="Persons"
+        />
+      </div>
+    </div>
+
+    <div class="options">
+      <fieldset class="group">
+        <legend>
+          <img src="assets/icons/schedule.svg" alt="" width="20" height="20" />
+          Cooking time:
+        </legend>
+        <div class="choices">
+          @for (option of cookingTimes; track option.value) {
+            <label class="tag-choice">
+              <input
+                type="radio"
+                name="cookingTime"
+                [value]="option.value"
+                [checked]="store.preferences().cookingTime === option.value"
+                (change)="setCookingTime(option.value)"
+              />
+              <span class="tag">{{ option.label }}</span>
+              <span class="hint">{{ option.hint }}</span>
+            </label>
+          }
+        </div>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>
+          <img src="assets/icons/public.svg" alt="" width="20" height="20" />
+          Cuisine
+        </legend>
+        <div class="choices">
+          @for (option of cuisines; track option.value) {
+            <label class="tag-choice">
+              <input
+                type="radio"
+                name="cuisine"
+                [value]="option.value"
+                [checked]="store.preferences().cuisine === option.value"
+                (change)="setCuisine(option.value)"
+              />
+              <span class="tag">{{ option.label }}</span>
+            </label>
+          }
+        </div>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>
+          <img src="assets/icons/fork-spoon.svg" alt="" width="18" height="20" />
+          Diet preferences
+        </legend>
+        <div class="choices">
+          @for (option of diets; track option.value) {
+            <label class="tag-choice">
+              <input
+                type="radio"
+                name="diet"
+                [value]="option.value"
+                [checked]="store.preferences().diet === option.value"
+                (change)="setDiet(option.value)"
+              />
+              <span class="tag">{{ option.label }}</span>
+            </label>
+          }
+        </div>
+      </fieldset>
+    </div>
+
+    <button type="submit" class="btn-primary" [disabled]="loading()">Generate a recipe</button>
+  </form>
+</main>
+
+@if (dialog(); as content) {
+  <app-error-dialog
+    [open]="true"
+    [title]="content.title"
+    [message]="content.message"
+    [actionLabel]="content.actionLabel"
+    (action)="onDialogAction()"
+    (closed)="dialog.set(null)"
+  />
+}
