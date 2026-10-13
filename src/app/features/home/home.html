@@ -1,4 +1,39 @@
-<section class="home">
-  <h1>Code a Cuisine</h1>
-  <p>Grundgerüst steht – Features folgen.</p>
-</section>
+<div class="home">
+  <app-menu-bar theme="dark" />
+
+  <main class="hero">
+    <section class="intro" aria-labelledby="home-title">
+      <p class="subtitle">AI-Powered recipe generator</p>
+      <h1 id="home-title" class="title">Code à Cuisine</h1>
+      <button type="button" class="btn-primary btn-primary--creme" (click)="getStarted()">
+        Get started
+      </button>
+    </section>
+
+    <section class="inspiration" aria-label="Cookbook">
+      <h2>Hungry for inspiration?</h2>
+      <a routerLink="/cookbook" class="btn-secondary btn-secondary--creme">
+        Go to cookbook
+        <svg width="26" height="15" viewBox="0 0 26 15" aria-hidden="true">
+          <path
+            d="M1 6.364a1 1 0 1 0 0 2v-2Zm24.707 1.707a1 1 0 0 0 0-1.414L19.343.293a1 1 0 0 0-1.414 1.414l5.657 5.657-5.657 5.657a1 1 0 0 0 1.414 1.414l6.364-6.364ZM1 8.364h24v-2H1v2Z"
+            fill="currentColor"
+          />
+        </svg>
+      </a>
+    </section>
+
+    <div class="plates" aria-hidden="true">
+      @for (plate of plates; track plate; let i = $index) {
+        <img
+          [src]="plate"
+          alt=""
+          width="480"
+          height="480"
+          [attr.fetchpriority]="i < 3 ? 'high' : null"
+          [attr.loading]="i < 3 ? null : 'lazy'"
+        />
+      }
+    </div>
+  </main>
+</div>
