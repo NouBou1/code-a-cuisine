@@ -6,6 +6,8 @@
  */
 export const environment = {
   production: true,
+  /** Use in-memory mock data instead of n8n and Firestore. */
+  useMock: true,
   firebase: {
     apiKey: 'YOUR_API_KEY',
     authDomain: 'YOUR_PROJECT.firebaseapp.com',
