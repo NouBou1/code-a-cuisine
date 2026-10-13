@@ -1,0 +1,31 @@
+<dialog
+  #dialog
+  class="dialog"
+  aria-labelledby="error-dialog-title"
+  (click)="onDialogClick($event)"
+  (close)="closed.emit()"
+>
+  <div class="content">
+    <button type="button" class="close" aria-label="Close" (click)="dialog.close()">
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+        <path
+          d="M1 1l12 12M13 1L1 13"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+    <h2 id="error-dialog-title" class="title">{{ title() }}</h2>
+    <p class="message">{{ message() }}</p>
+    <button type="button" class="btn-secondary btn-secondary--creme" (click)="onAction()">
+      {{ actionLabel() }}
+      <svg width="26" height="15" viewBox="0 0 26 15" aria-hidden="true">
+        <path
+          d="M1 6.364a1 1 0 1 0 0 2v-2Zm24.707 1.707a1 1 0 0 0 0-1.414L19.343.293a1 1 0 0 0-1.414 1.414l5.657 5.657-5.657 5.657a1 1 0 0 0 1.414 1.414l6.364-6.364ZM1 8.364h24v-2H1v2Z"
+          fill="currentColor"
+        />
+      </svg>
+    </button>
+  </div>
+</dialog>

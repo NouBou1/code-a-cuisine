@@ -1,0 +1,101 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  background: $green;
+  color: $creme;
+}
+
+.content {
+  flex: 1;
+  @include flex-center;
+  flex-direction: column;
+  gap: 24px;
+  padding: 16px;
+}
+
+.spinner {
+  width: 253px;
+  height: auto;
+
+  @include mobile {
+    width: 180px;
+  }
+}
+
+.text {
+  font-family: $font-display;
+  font-size: 48px;
+  font-weight: 700;
+
+  @include mobile {
+    font-size: 32px;
+  }
+}
+
+// Dots vanish one after another from the right, then reappear in the same way.
+.dots span {
+  animation: dot 2.4s infinite;
+
+  &:nth-child(3) {
+    animation-name: dot-3;
+  }
+
+  &:nth-child(2) {
+    animation-name: dot-2;
+  }
+
+  &:nth-child(1) {
+    animation-name: dot-1;
+  }
+}
+
+@keyframes dot-3 {
+  0%,
+  12% {
+    opacity: 1;
+  }
+  13%,
+  62% {
+    opacity: 0;
+  }
+  63%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes dot-2 {
+  0%,
+  25% {
+    opacity: 1;
+  }
+  26%,
+  74% {
+    opacity: 0;
+  }
+  75%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes dot-1 {
+  0%,
+  37% {
+    opacity: 1;
+  }
+  38%,
+  87% {
+    opacity: 0;
+  }
+  88%,
+  100% {
+    opacity: 1;
+  }
+}
