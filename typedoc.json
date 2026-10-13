@@ -1,9 +1,15 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["src/app"],
+  "entryPoints": [
+    "src/app"
+  ],
   "entryPointStrategy": "expand",
-  "exclude": ["**/*.spec.ts"],
+  "exclude": [
+    "**/*.spec.ts"
+  ],
   "tsconfig": "tsconfig.app.json",
   "out": "docs",
-  "name": "Code a Cuisine"
+  "name": "Code a Cuisine",
+  "excludeProtected": true,
+  "excludePrivate": true
 }
