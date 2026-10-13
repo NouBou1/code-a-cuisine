@@ -1,0 +1,193 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+.page {
+  @include page-content;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  padding-top: 48px;
+  padding-bottom: 64px;
+
+  @include mobile {
+    gap: 32px;
+    padding-top: 24px;
+  }
+}
+
+// Intro and most liked recipes
+.top {
+  display: flex;
+  gap: 32px;
+  padding: 40px 24px;
+  border-radius: $radius-lg;
+  background: rgba($green, 0.04);
+
+  @include tablet {
+    flex-direction: column;
+  }
+
+  @include mobile {
+    padding: 24px 16px;
+  }
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 0 0 454px;
+
+  h1 {
+    font-size: 64px;
+    font-weight: 700;
+    color: $green-dark;
+  }
+
+  p {
+    font-size: 24px;
+  }
+
+  @include tablet {
+    flex-basis: auto;
+  }
+
+  @include mobile {
+    h1 {
+      font-size: 40px;
+    }
+
+    p {
+      font-size: 18px;
+    }
+  }
+}
+
+.most-liked {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 24px;
+    font-weight: 600;
+    color: $green-dark;
+  }
+}
+
+.liked-list {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 8px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.liked-list li {
+  flex: 0 0 370px;
+  scroll-snap-align: start;
+
+  @include mobile {
+    flex-basis: 260px;
+  }
+}
+
+.liked-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  padding: 16px 88px 16px 12px;
+  border-radius: $radius-md;
+  background: rgba($green-light, 0.7);
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background: $green-light;
+  }
+
+  .time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
+    color: $green;
+  }
+
+  .title {
+    font-size: 24px;
+    color: $green-dark;
+
+    @include mobile {
+      font-size: 18px;
+    }
+  }
+
+  .likes {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+}
+
+.status {
+  font-size: 18px;
+}
+
+.retry {
+  @include button-reset;
+  text-decoration: underline;
+}
+
+// Cuisine categories
+.cuisines {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px 64px;
+
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cuisine-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: $green-dark;
+
+    @include mobile {
+      font-size: 22px;
+    }
+  }
+
+  img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    transition: transform 200ms ease;
+  }
+
+  &:hover img {
+    transform: scale(1.02);
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}

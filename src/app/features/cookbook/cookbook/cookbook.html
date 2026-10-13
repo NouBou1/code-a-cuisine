@@ -1,0 +1,71 @@
+<app-menu-bar backLink="/" backLabel="Back" />
+
+<main class="page">
+  <section class="top">
+    <div class="intro">
+      <h1>Cookbook</h1>
+      <p>
+        From quick bites to gourmet delights, explore them all in our ultimate cookbook and get
+        inspired for your next culinary adventure.
+      </p>
+    </div>
+
+    <section class="most-liked" aria-labelledby="most-liked-title">
+      <h2 id="most-liked-title">
+        Most liked recipes
+        <img src="assets/icons/heart.svg" alt="" width="28" height="26" />
+      </h2>
+      @if (mostLiked.isLoading()) {
+        <p class="status" role="status">Loading...</p>
+      } @else if (mostLiked.error()) {
+        <p class="status" role="alert">
+          The recipes could not be loaded.
+          <button type="button" class="retry" (click)="mostLiked.reload()">Retry</button>
+        </p>
+      } @else if (mostLiked.value()?.length) {
+        <ul class="liked-list">
+          @for (recipe of mostLiked.value(); track recipe.id) {
+            <li>
+              <a
+                class="liked-card"
+                [routerLink]="['/recipe', recipe.id]"
+                [queryParams]="{ from: 'cookbook' }"
+              >
+                <span class="time">
+                  <img src="assets/icons/schedule.svg" alt="" width="16" height="16" />
+                  Cooking time: {{ recipe.durationMinutes }}min
+                </span>
+                <span class="title">{{ recipe.title }}</span>
+                <app-likes-tag class="likes" [count]="recipe.likes" />
+              </a>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="status">No recipes yet. Generate the first one!</p>
+      }
+    </section>
+  </section>
+
+  <section aria-label="Cuisines">
+    <ul class="cuisines">
+      @for (cuisine of cuisines; track cuisine.value) {
+        <li>
+          <a class="cuisine-card" [routerLink]="['/cookbook', cuisine.value]">
+            <h2>
+              {{ cuisine.label }} cuisine <span aria-hidden="true">{{ cuisine.emoji }}</span>
+            </h2>
+            <img [src]="cuisine.image" alt="" width="400" height="400" loading="lazy" />
+          </a>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <div class="actions">
+    <button type="button" class="btn-secondary" (click)="generateNew()">
+      Generate new recipe
+      <img src="assets/icons/arrow-right.svg" alt="" width="26" height="15" />
+    </button>
+  </div>
+</main>
