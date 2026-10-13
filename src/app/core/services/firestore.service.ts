@@ -1,13 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import {
   DocumentData,
+  QueryConstraint,
   addDoc,
   collection,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
+  increment,
   onSnapshot,
+  query,
+  updateDoc,
 } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { FIRESTORE } from '../firebase/firebase.providers';
@@ -39,13 +43,17 @@ export class FirestoreService {
   }
 
   /**
-   * Reads all documents of a collection once.
+   * Reads the documents of a collection once, optionally filtered and sorted.
    *
    * @param path - Collection path.
-   * @returns Promise resolving to the documents.
+   * @param constraints - Query constraints like `where`, `orderBy` or `limit`.
+   * @returns Promise resolving to the matching documents.
    */
-  async getAll<T extends DocumentData>(path: string): Promise<WithId<T>[]> {
-    const snap = await getDocs(collection(this.db, path));
+  async getAll<T extends DocumentData>(
+    path: string,
+    ...constraints: QueryConstraint[]
+  ): Promise<WithId<T>[]> {
+    const snap = await getDocs(query(collection(this.db, path), ...constraints));
     return snap.docs.map((d) => ({ id: d.id, ...(d.data() as T) }));
   }
 
@@ -71,6 +79,18 @@ export class FirestoreService {
   async add<T extends DocumentData>(path: string, data: T): Promise<string> {
     const ref = await addDoc(collection(this.db, path), data);
     return ref.id;
+  }
+
+  /**
+   * Atomically increments a numeric field, safe against concurrent updates.
+   *
+   * @param path - Collection path.
+   * @param id - Document id.
+   * @param field - Name of the numeric field.
+   * @param by - Amount to add, defaults to `1`.
+   */
+  async increment(path: string, id: string, field: string, by = 1): Promise<void> {
+    await updateDoc(doc(this.db, path, id), { [field]: increment(by) });
   }
 
   /**
