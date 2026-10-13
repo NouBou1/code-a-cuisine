@@ -1,0 +1,39 @@
+<nav class="pagination" aria-label="Pagination">
+  <button
+    type="button"
+    class="arrow"
+    aria-label="Previous page"
+    [disabled]="page() <= 1"
+    (click)="select(page() - 1)"
+  >
+    &lt;
+  </button>
+  <ol>
+    @for (item of items(); track $index) {
+      <li>
+        @if (item === gap) {
+          <span class="gap" aria-hidden="true">...</span>
+        } @else {
+          <button
+            type="button"
+            class="page"
+            [class.active]="item === page()"
+            [attr.aria-current]="item === page() ? 'page' : null"
+            (click)="select(item)"
+          >
+            {{ item }}
+          </button>
+        }
+      </li>
+    }
+  </ol>
+  <button
+    type="button"
+    class="arrow"
+    aria-label="Next page"
+    [disabled]="page() >= totalPages()"
+    (click)="select(page() + 1)"
+  >
+    &gt;
+  </button>
+</nav>

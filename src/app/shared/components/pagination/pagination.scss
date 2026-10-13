@@ -1,0 +1,42 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+.pagination {
+  @include flex-center;
+  gap: 16px;
+  font-size: 18px;
+}
+
+ol {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arrow,
+.page {
+  @include button-reset;
+  min-width: 33px;
+  height: 27px;
+  padding: 0 8px;
+  border-radius: 2px;
+}
+
+.arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.page {
+  &:hover {
+    background: rgba($green-pale, 0.4);
+  }
+
+  &.active {
+    background: $green-pale;
+  }
+}
+
+.gap {
+  letter-spacing: 2px;
+}
