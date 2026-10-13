@@ -1,12 +1,5 @@
-/**
- * Production environment configuration.
- *
- * Replace the placeholder values with the config of your Firebase project
- * and the base URL of your n8n instance.
- */
 export const environment = {
   production: true,
-  /** Use in-memory mock data instead of n8n and Firestore. */
   useMock: true,
   firebase: {
     apiKey: 'YOUR_API_KEY',

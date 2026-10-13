@@ -4,9 +4,7 @@ import { COOKING_TIME_OPTIONS, CUISINES, labelOf } from '../../../core/constants
 import { GeneratorStore } from '../../../core/state/generator.store';
 import { MenuBar } from '../../../shared/components/menu-bar/menu-bar';
 
-/**
- * Shows the recipes generated from the user's ingredients.
- */
+/** Generated recipes. */
 @Component({
   imports: [MenuBar, RouterLink],
   selector: 'app-results',
@@ -17,13 +15,12 @@ export class Results {
   protected readonly store = inject(GeneratorStore);
   private readonly router = inject(Router);
 
-  /** Tags summarizing the chosen preferences, e.g. `Italian`, `Quick`. */
   protected readonly tags = computed(() => {
     const { cuisine, cookingTime } = this.store.preferences();
     return [labelOf(CUISINES, cuisine), labelOf(COOKING_TIME_OPTIONS, cookingTime)];
   });
 
-  /** Starts over with a fresh generator. */
+  /** Starts a fresh generation. */
   protected generateNew(): void {
     this.store.reset();
     this.router.navigate(['/generate']);

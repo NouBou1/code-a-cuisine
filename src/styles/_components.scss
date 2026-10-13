@@ -1,8 +1,7 @@
-// Global building blocks matching the Figma components.
 @use 'variables' as *;
 @use 'mixins' as *;
 
-// Primary buttons ("Get started", "Next step", "View")
+// Primary button
 .btn-primary {
   @include button-reset;
   display: inline-flex;
@@ -43,7 +42,7 @@
   }
 }
 
-// Secondary buttons with arrow ("Go to cookbook →")
+// Secondary button
 .btn-secondary {
   @include button-reset;
   display: inline-flex;
@@ -81,7 +80,7 @@
   }
 }
 
-// Tags / chips ("Quick", "Vegetarian")
+// Tag
 .tag {
   @include button-reset;
   display: inline-flex;
@@ -118,7 +117,7 @@
   }
 }
 
-// Radio buttons rendered as selectable tags (preferences form)
+// Tag choice
 .tag-choice {
   position: relative;
   display: inline-flex;
@@ -166,7 +165,7 @@
   }
 }
 
-// Pill shaped text and number inputs
+// Input
 .pill-input {
   height: 36px;
   padding: 0 16px;
@@ -188,7 +187,6 @@
     border-color: #b3261e;
   }
 
-  // Hide the number spinners, the design has none
   &[type='number'] {
     -moz-appearance: textfield;
     appearance: textfield;
@@ -205,7 +203,7 @@
   }
 }
 
-// Pill shaped native select with the design's dropdown arrow
+// Select
 .pill-select {
   height: 36px;
   padding: 0 26px 0 12px;
@@ -222,13 +220,13 @@
   }
 }
 
-// Inline validation message
+// Field error
 .field-error {
   font-size: 14px;
   color: #b3261e;
 }
 
-// Visually hidden but readable by screen readers
+// Screen reader only
 .sr-only {
   position: absolute;
   width: 1px;

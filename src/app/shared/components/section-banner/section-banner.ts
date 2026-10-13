@@ -1,12 +1,6 @@
 import { Component, input } from '@angular/core';
 
-/**
- * Creme banner with food illustrations left and right and a centered heading,
- * e.g. "Ingredients" or "Italian cuisine". The heading is projected as content.
- *
- * Per design note, the banner keeps its size on large screens and only
- * shrinks on smaller devices.
- */
+/** Illustrated banner with a projected heading. */
 @Component({
   selector: 'app-section-banner',
   styleUrl: './section-banner.scss',
@@ -16,6 +10,5 @@ import { Component, input } from '@angular/core';
   `,
 })
 export class SectionBanner {
-  /** Path of the illustrated banner image. */
   readonly image = input.required<string>();
 }

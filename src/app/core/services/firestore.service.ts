@@ -16,21 +16,17 @@ import {
 import { Observable } from 'rxjs';
 import { FIRESTORE } from '../firebase/firebase.providers';
 
-/** A Firestore document together with its id. */
 export type WithId<T> = T & { id: string };
 
-/**
- * Generic helpers for reading and writing Firestore collections.
- */
+/** Generic read and write helpers for Firestore. */
 @Injectable({ providedIn: 'root' })
 export class FirestoreService {
   private readonly db = inject(FIRESTORE);
 
   /**
-   * Streams all documents of a collection in real time.
-   *
-   * @param path - Collection path, e.g. `recipes`.
-   * @returns Observable emitting the current list of documents on every change.
+   * Streams all documents of a collection.
+   * @param path - Collection path.
+   * @returns The documents, emitted on every change.
    */
   watchCollection<T extends DocumentData>(path: string): Observable<WithId<T>[]> {
     return new Observable((subscriber) =>
@@ -43,11 +39,10 @@ export class FirestoreService {
   }
 
   /**
-   * Reads the documents of a collection once, optionally filtered and sorted.
-   *
+   * Reads the documents of a collection once.
    * @param path - Collection path.
-   * @param constraints - Query constraints like `where`, `orderBy` or `limit`.
-   * @returns Promise resolving to the matching documents.
+   * @param constraints - Optional `where`, `orderBy` or `limit`.
+   * @returns The matching documents.
    */
   async getAll<T extends DocumentData>(
     path: string,
@@ -59,10 +54,9 @@ export class FirestoreService {
 
   /**
    * Reads a single document.
-   *
    * @param path - Collection path.
    * @param id - Document id.
-   * @returns Promise resolving to the document, or `null` if it does not exist.
+   * @returns The document, or `null` if missing.
    */
   async getById<T extends DocumentData>(path: string, id: string): Promise<WithId<T> | null> {
     const snap = await getDoc(doc(this.db, path, id));
@@ -70,11 +64,10 @@ export class FirestoreService {
   }
 
   /**
-   * Adds a new document with an auto-generated id.
-   *
+   * Adds a document with a generated id.
    * @param path - Collection path.
    * @param data - Document data.
-   * @returns Promise resolving to the new document id.
+   * @returns The new document id.
    */
   async add<T extends DocumentData>(path: string, data: T): Promise<string> {
     const ref = await addDoc(collection(this.db, path), data);
@@ -82,12 +75,11 @@ export class FirestoreService {
   }
 
   /**
-   * Atomically increments a numeric field, safe against concurrent updates.
-   *
+   * Atomically increments a numeric field.
    * @param path - Collection path.
    * @param id - Document id.
-   * @param field - Name of the numeric field.
-   * @param by - Amount to add, defaults to `1`.
+   * @param field - Field name.
+   * @param by - Amount to add.
    */
   async increment(path: string, id: string, field: string, by = 1): Promise<void> {
     await updateDoc(doc(this.db, path, id), { [field]: increment(by) });
@@ -95,7 +87,6 @@ export class FirestoreService {
 
   /**
    * Deletes a document.
-   *
    * @param path - Collection path.
    * @param id - Document id.
    */

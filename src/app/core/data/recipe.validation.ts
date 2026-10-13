@@ -1,12 +1,9 @@
 import { Recipe, RecipeIngredient, RecipeStep } from '../models/recipe.model';
 
 /**
- * Checks at runtime whether an unknown value has the shape of a {@link Recipe}.
- *
- * Used to validate data from the n8n workflow and Firestore, since the AI
- * output can't be trusted to always match the expected format.
- *
- * @param value - The value to check.
+ * Checks at runtime whether a value is a valid recipe.
+ * @param value - Value from n8n or Firestore.
+ * @returns `true` if it has the shape of a `Recipe`.
  */
 export function isRecipe(value: unknown): value is Recipe {
   if (!isObject(value)) return false;
@@ -28,10 +25,20 @@ export function isRecipe(value: unknown): value is Recipe {
   );
 }
 
+/**
+ * Checks an ingredient line.
+ * @param value - Value to check.
+ * @returns `true` if valid.
+ */
 function isRecipeIngredient(value: unknown): value is RecipeIngredient {
   return isObject(value) && isString(value['quantity']) && isString(value['name']);
 }
 
+/**
+ * Checks a preparation step.
+ * @param value - Value to check.
+ * @returns `true` if valid.
+ */
 function isRecipeStep(value: unknown): value is RecipeStep {
   return (
     isObject(value) &&
@@ -41,18 +48,39 @@ function isRecipeStep(value: unknown): value is RecipeStep {
   );
 }
 
+/**
+ * Checks for a plain object.
+ * @param value - Value to check.
+ * @returns `true` for non-null, non-array objects.
+ */
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+/**
+ * Checks for a string.
+ * @param value - Value to check.
+ * @returns `true` for strings.
+ */
 function isString(value: unknown): value is string {
   return typeof value === 'string';
 }
 
+/**
+ * Checks for a finite number.
+ * @param value - Value to check.
+ * @returns `true` for finite numbers.
+ */
 function isNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
+/**
+ * Checks an array and all of its items.
+ * @param value - Value to check.
+ * @param guard - Check for each item.
+ * @returns `true` if all items pass.
+ */
 function isArrayOf<T>(value: unknown, guard: (item: unknown) => item is T): value is T[] {
   return Array.isArray(value) && value.every(guard);
 }

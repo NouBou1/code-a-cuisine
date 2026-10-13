@@ -6,40 +6,25 @@ import { Ingredient, IngredientUnit } from '../models/ingredient.model';
 import { DEFAULT_PREFERENCES, Preferences } from '../models/preferences.model';
 import { Recipe } from '../models/recipe.model';
 
-/** sessionStorage key for the generator state. */
 const STORAGE_KEY = 'cac-generator';
-
-/** Maximum length of an ingredient name. */
 export const MAX_INGREDIENT_NAME_LENGTH = 40;
-
-/** Maximum number of ingredients per generation. */
 export const MAX_INGREDIENTS = 20;
-
-/** Upper bound for a single ingredient amount. */
 export const MAX_AMOUNT = 10_000;
 
-/** Persisted shape of the generator state. */
 interface GeneratorState {
   ingredients: Ingredient[];
   preferences: Preferences;
   results: Recipe[];
 }
 
-/** Input for adding or updating an ingredient. */
 export type IngredientInput = Pick<Ingredient, 'name' | 'amount' | 'unit'>;
 
-/**
- * Holds the state of the multi-step recipe generator: ingredients (step 1),
- * preferences (step 2) and the generated results.
- *
- * The state is kept in sessionStorage, so a page reload doesn't lose it.
- */
+/** Shared state of the generator steps, persisted in sessionStorage. */
 @Injectable({ providedIn: 'root' })
 export class GeneratorStore {
   private readonly generator = inject(RecipeGenerator);
   private readonly state = signal<GeneratorState>(loadState());
 
-  /** Ingredients, most recently added first. */
   readonly ingredients = computed(() => this.state().ingredients);
   readonly preferences = computed(() => this.state().preferences);
   readonly results = computed(() => this.state().results);
@@ -51,13 +36,9 @@ export class GeneratorStore {
   }
 
   /**
-   * Adds an ingredient at the top of the list.
-   *
-   * If the same ingredient with the same unit already exists, the amounts are
-   * summed up and the entry moves to the top instead.
-   *
+   * Adds an ingredient on top; merges it with an existing one of the same name and unit.
    * @param input - Name, amount and unit.
-   * @returns `false` if the input is invalid or the list is full.
+   * @returns `false` if invalid or the list is full.
    */
   addIngredient(input: IngredientInput): boolean {
     const ingredient = normalizeIngredient(input);
@@ -75,11 +56,10 @@ export class GeneratorStore {
   }
 
   /**
-   * Replaces name, amount and unit of an existing ingredient.
-   *
+   * Replaces the values of an ingredient.
    * @param id - Ingredient id.
    * @param input - New values.
-   * @returns `false` if the input is invalid.
+   * @returns `false` if invalid.
    */
   updateIngredient(id: string, input: IngredientInput): boolean {
     const ingredient = normalizeIngredient(input);
@@ -92,7 +72,6 @@ export class GeneratorStore {
 
   /**
    * Removes an ingredient.
-   *
    * @param id - Ingredient id.
    */
   removeIngredient(id: string): void {
@@ -100,8 +79,7 @@ export class GeneratorStore {
   }
 
   /**
-   * Updates some of the preferences.
-   *
+   * Updates some preferences.
    * @param changes - Preferences to change.
    */
   updatePreferences(changes: Partial<Preferences>): void {
@@ -109,10 +87,8 @@ export class GeneratorStore {
   }
 
   /**
-   * Generates recipes from the current ingredients and preferences and stores
-   * them as results.
-   *
-   * @returns Observable emitting the recipes, or an `ApiError`.
+   * Generates recipes and stores them as results.
+   * @returns The generated recipes, or an `ApiError`.
    */
   generate(): Observable<Recipe[]> {
     const ingredients = this.ingredients().map(({ name, amount, unit }) => ({
@@ -125,11 +101,15 @@ export class GeneratorStore {
       .pipe(tap((results) => this.patch({ results })));
   }
 
-  /** Clears everything to start a new generation. */
+  /** Clears the generator for a new run. */
   reset(): void {
     this.state.set(initialState());
   }
 
+  /**
+   * Merges changes into the state.
+   * @param changes - Changed state parts.
+   */
   private patch(changes: Partial<GeneratorState>): void {
     this.state.update((s) => ({ ...s, ...changes }));
   }
@@ -137,9 +117,8 @@ export class GeneratorStore {
 
 /**
  * Trims and validates an ingredient input.
- *
  * @param input - Raw user input.
- * @returns The cleaned input, or `null` if it's invalid.
+ * @returns The cleaned input, or `null` if invalid.
  */
 export function normalizeIngredient(input: IngredientInput): IngredientInput | null {
   const name = input.name.trim().replace(/\s+/g, ' ');
@@ -150,15 +129,27 @@ export function normalizeIngredient(input: IngredientInput): IngredientInput | n
   return { name, amount: Math.round(amount * 10) / 10, unit: input.unit };
 }
 
+/**
+ * Checks whether a value is a known unit.
+ * @param value - Value to check.
+ * @returns `true` for `gram`, `ml` or `piece`.
+ */
 function isUnit(value: string): value is IngredientUnit {
   return value === 'gram' || value === 'ml' || value === 'piece';
 }
 
+/**
+ * Creates an empty generator state.
+ * @returns The initial state.
+ */
 function initialState(): GeneratorState {
   return { ingredients: [], preferences: { ...DEFAULT_PREFERENCES }, results: [] };
 }
 
-/** Restores the state from sessionStorage, discarding anything malformed. */
+/**
+ * Restores the state from sessionStorage, dropping invalid entries.
+ * @returns The stored or the initial state.
+ */
 function loadState(): GeneratorState {
   try {
     const stored = JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? 'null');
@@ -171,16 +162,16 @@ function loadState(): GeneratorState {
         results: stored.results.filter(isRecipe),
       };
     }
-  } catch {
-    // Corrupt or inaccessible storage: start fresh.
-  }
+  } catch {}
   return initialState();
 }
 
+/**
+ * Saves the state to sessionStorage, ignoring storage errors.
+ * @param state - State to save.
+ */
 function saveState(state: GeneratorState): void {
   try {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    // Persisting is a convenience; the app works without it.
-  }
+  } catch {}
 }

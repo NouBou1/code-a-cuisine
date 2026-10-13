@@ -1,12 +1,5 @@
-/**
- * Development environment configuration.
- *
- * Uses the n8n test webhooks (`/webhook-test`), which are active while a
- * workflow is opened in the n8n editor and listening for test events.
- */
 export const environment = {
   production: false,
-  /** Use in-memory mock data instead of n8n and Firestore. */
   useMock: true,
   firebase: {
     apiKey: 'YOUR_API_KEY',

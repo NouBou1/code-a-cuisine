@@ -6,12 +6,9 @@ import { GeneratorStore } from '../../../core/state/generator.store';
 import { LikesTag } from '../../../shared/components/likes-tag/likes-tag';
 import { MenuBar } from '../../../shared/components/menu-bar/menu-bar';
 
-/** Number of recipes in the "Most liked" row. */
 const MOST_LIKED_COUNT = 5;
 
-/**
- * Cookbook overview: the most liked recipes and all cuisine categories.
- */
+/** Cookbook with most liked recipes and cuisines. */
 @Component({
   imports: [MenuBar, RouterLink, LikesTag],
   selector: 'app-cookbook',
@@ -29,7 +26,7 @@ export class Cookbook {
 
   protected readonly cuisines = COOKBOOK_ORDER.map((value) => findCuisine(value)!);
 
-  /** Starts over with a fresh generator. */
+  /** Starts a fresh generation. */
   protected generateNew(): void {
     this.store.reset();
     this.router.navigate(['/generate']);

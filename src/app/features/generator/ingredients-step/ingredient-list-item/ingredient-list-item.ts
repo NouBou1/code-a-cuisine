@@ -8,15 +8,12 @@ import {
 } from '../../../../core/models/ingredient.model';
 import { MAX_AMOUNT } from '../../../../core/state/generator.store';
 
-/** Changed values emitted when an edit is confirmed. */
 export interface IngredientChange {
   amount: number;
   unit: IngredientUnit;
 }
 
-/**
- * One entry of the ingredient list. In edit mode amount and unit can be changed.
- */
+/** Ingredient list entry with edit mode for amount and unit. */
 @Component({
   imports: [FormsModule],
   selector: 'app-ingredient-list-item',
@@ -25,9 +22,7 @@ export interface IngredientChange {
 })
 export class IngredientListItem {
   readonly ingredient = input.required<Ingredient>();
-  /** Emits the new amount and unit when the user confirms an edit. */
   readonly changed = output<IngredientChange>();
-  /** Emits when the user deletes the entry. */
   readonly removed = output<void>();
 
   protected readonly units = INGREDIENT_UNITS;
@@ -44,7 +39,7 @@ export class IngredientListItem {
 
   private readonly amountInput = viewChild<ElementRef<HTMLInputElement>>('amountInput');
 
-  /** Switches to edit mode with the current values. */
+  /** Opens edit mode with the current values. */
   protected startEdit(): void {
     this.amount.set(this.ingredient().amount);
     this.unit.set(this.ingredient().unit);
@@ -52,14 +47,14 @@ export class IngredientListItem {
     queueMicrotask(() => this.amountInput()?.nativeElement.select());
   }
 
-  /** Emits the changes if they are valid and leaves edit mode. */
+  /** Saves valid changes and closes edit mode. */
   protected confirm(): void {
     if (!this.amountValid()) return;
     this.changed.emit({ amount: this.amount(), unit: this.unit() });
     this.editing.set(false);
   }
 
-  /** Leaves edit mode without saving. */
+  /** Closes edit mode without saving. */
   protected cancel(): void {
     this.editing.set(false);
   }

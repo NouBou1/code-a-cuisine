@@ -18,7 +18,6 @@
   justify-content: center;
 }
 
-/** Centers content at desktop width while the background spans the full screen. */
 @mixin page-content {
   width: 100%;
   max-width: $content-max-width;
@@ -30,7 +29,6 @@
   }
 }
 
-/** Resets a native button so it can be styled freely. */
 @mixin button-reset {
   border: none;
   background: none;

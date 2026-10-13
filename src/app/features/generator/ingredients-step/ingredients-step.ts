@@ -11,12 +11,9 @@ import {
 import { MenuBar } from '../../../shared/components/menu-bar/menu-bar';
 import { IngredientChange, IngredientListItem } from './ingredient-list-item/ingredient-list-item';
 
-/** Letters (incl. umlauts and accents), spaces, hyphens and apostrophes. */
 const NAME_PATTERN = /^[\p{L}][\p{L}\s'’-]*$/u;
 
-/**
- * Step 1 of the generator: the user enters the ingredients they have.
- */
+/** Generator step 1: enter ingredients. */
 @Component({
   imports: [MenuBar, ReactiveFormsModule, IngredientListItem],
   selector: 'app-ingredients-step',
@@ -32,7 +29,6 @@ export class IngredientsStep {
   protected readonly maxIngredients = MAX_INGREDIENTS;
   protected readonly maxNameLength = MAX_INGREDIENT_NAME_LENGTH;
   protected readonly maxAmount = MAX_AMOUNT;
-  /** Set after a failed submit, so errors only show once the user tried. */
   protected readonly submitted = signal(false);
 
   protected readonly form = this.fb.group({
@@ -50,7 +46,7 @@ export class IngredientsStep {
 
   private readonly nameInput = viewChild.required<ElementRef<HTMLInputElement>>('nameInput');
 
-  /** Adds the entered ingredient to the list and resets the name field. */
+  /** Adds the entered ingredient and resets the name field. */
   protected add(): void {
     this.submitted.set(true);
     if (this.form.invalid) return;
@@ -63,9 +59,8 @@ export class IngredientsStep {
 
   /**
    * Applies an edit from the list.
-   *
    * @param id - Ingredient id.
-   * @param name - Unchanged ingredient name.
+   * @param name - Ingredient name.
    * @param change - New amount and unit.
    */
   protected update(id: string, name: string, change: IngredientChange): void {
@@ -77,7 +72,11 @@ export class IngredientsStep {
     if (this.store.hasIngredients()) this.router.navigate(['/generate/preferences']);
   }
 
-  /** Whether an error should be shown for a form control. */
+  /**
+   * Checks whether to show an error for a field.
+   * @param control - Field name.
+   * @returns `true` if invalid and touched or submitted.
+   */
   protected showError(control: 'name' | 'amount'): boolean {
     const c = this.form.controls[control];
     return c.invalid && (this.submitted() || c.dirty);

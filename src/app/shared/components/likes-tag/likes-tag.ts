@@ -1,8 +1,6 @@
 import { Component, input } from '@angular/core';
 
-/**
- * Small tag with a heart and the number of likes.
- */
+/** Tag with heart and like count. */
 @Component({
   selector: 'app-likes-tag',
   template: `

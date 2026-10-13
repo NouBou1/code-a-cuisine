@@ -16,19 +16,14 @@ import { Counter } from '../../../shared/components/counter/counter';
 import { Loader } from '../../../shared/components/loader/loader';
 import { MenuBar } from '../../../shared/components/menu-bar/menu-bar';
 
-/** Content of the error pop-up. */
 interface DialogContent {
   title: string;
   message: string;
   actionLabel: string;
-  /** Whether the action leads back to the ingredients. */
   backToIngredients: boolean;
 }
 
-/**
- * Step 2 of the generator: portions, cooks, cooking time, cuisine and diet.
- * Starts the recipe generation and shows the loader meanwhile.
- */
+/** Generator step 2: choose preferences and start the generation. */
 @Component({
   imports: [MenuBar, Counter, Loader, ErrorDialog],
   selector: 'app-preferences-step',
@@ -49,27 +44,47 @@ export class PreferencesStep {
   protected readonly loading = signal(false);
   protected readonly dialog = signal<DialogContent | null>(null);
 
+  /**
+   * Sets the number of portions.
+   * @param portions - New value.
+   */
   protected setPortions(portions: number): void {
     this.store.updatePreferences({ portions });
   }
 
+  /**
+   * Sets the number of cooks.
+   * @param cooks - New value.
+   */
   protected setCooks(cooks: number): void {
     this.store.updatePreferences({ cooks });
   }
 
+  /**
+   * Sets the cooking time.
+   * @param cookingTime - New value.
+   */
   protected setCookingTime(cookingTime: CookingTime): void {
     this.store.updatePreferences({ cookingTime });
   }
 
+  /**
+   * Sets the cuisine.
+   * @param cuisine - New value.
+   */
   protected setCuisine(cuisine: Cuisine): void {
     this.store.updatePreferences({ cuisine });
   }
 
+  /**
+   * Sets the diet.
+   * @param diet - New value.
+   */
   protected setDiet(diet: Diet): void {
     this.store.updatePreferences({ diet });
   }
 
-  /** Generates the recipes and continues to the results. */
+  /** Generates recipes and opens the results. */
   protected generate(): void {
     if (this.loading()) return;
     this.loading.set(true);
@@ -85,7 +100,7 @@ export class PreferencesStep {
       });
   }
 
-  /** Handles the dialog action. */
+  /** Goes back to the ingredients if the error requires it. */
   protected onDialogAction(): void {
     if (this.dialog()?.backToIngredients) this.router.navigate(['/generate']);
   }
@@ -93,8 +108,8 @@ export class PreferencesStep {
 
 /**
  * Maps a generation error to the pop-up content.
- *
- * @param error - The error from the generator.
+ * @param error - Error from the generator.
+ * @returns Title, message and action.
  */
 function toDialogContent(error: unknown): DialogContent {
   if (isApiError(error) && error.code === INSUFFICIENT_INGREDIENTS) {

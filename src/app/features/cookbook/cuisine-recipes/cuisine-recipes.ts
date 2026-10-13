@@ -14,12 +14,9 @@ import { MenuBar } from '../../../shared/components/menu-bar/menu-bar';
 import { Pagination } from '../../../shared/components/pagination/pagination';
 import { SectionBanner } from '../../../shared/components/section-banner/section-banner';
 
-/** Recipes per page. */
 export const PAGE_SIZE = 15;
 
-/**
- * Lists all recipes of one cuisine, paginated.
- */
+/** Paginated recipe list of one cuisine. */
 @Component({
   imports: [MenuBar, RouterLink, LikesTag, Pagination, SectionBanner],
   selector: 'app-cuisine-recipes',
@@ -31,9 +28,7 @@ export class CuisineRecipes {
   private readonly store = inject(GeneratorStore);
   private readonly router = inject(Router);
 
-  /** Cuisine id from the route. */
   readonly cuisine = input.required<string>();
-  /** 1-based page from the query params. */
   readonly page = input(1, { transform: (v: unknown) => numberAttribute(v, 1) });
 
   protected readonly info = computed(() => findCuisine(this.cuisine()));
@@ -46,7 +41,6 @@ export class CuisineRecipes {
   protected readonly totalPages = computed(() =>
     Math.max(1, Math.ceil((this.recipes.value()?.length ?? 0) / PAGE_SIZE)),
   );
-  /** Current page, clamped to the valid range. */
   protected readonly currentPage = computed(() =>
     Math.min(Math.max(1, Math.floor(this.page())), this.totalPages()),
   );
@@ -54,13 +48,12 @@ export class CuisineRecipes {
     const start = (this.currentPage() - 1) * PAGE_SIZE;
     return (this.recipes.value() ?? []).slice(start, start + PAGE_SIZE);
   });
-  /** Number of the first recipe on the current page. */
   protected readonly offset = computed(() => (this.currentPage() - 1) * PAGE_SIZE);
 
   /**
-   * Returns the tags of a recipe, e.g. `Vegetarian`, `Quick`.
-   *
+   * Returns the tags of a recipe.
    * @param recipe - The recipe.
+   * @returns Labels like `Vegetarian`, `Quick`.
    */
   protected tagsOf(recipe: Recipe): string[] {
     const tags = [labelOf(COOKING_TIME_OPTIONS, recipe.cookingTime)];
@@ -68,13 +61,16 @@ export class CuisineRecipes {
     return tags;
   }
 
-  /** Navigates to another page and scrolls to the top. */
+  /**
+   * Opens another page and scrolls up.
+   * @param page - Target page.
+   */
   protected goToPage(page: number): void {
     this.router.navigate([], { queryParams: { page }, queryParamsHandling: 'merge' });
     window.scrollTo({ top: 0 });
   }
 
-  /** Starts a fresh generation with this cuisine preselected. */
+  /** Starts the generator with this cuisine preselected. */
   protected generate(): void {
     this.store.reset();
     const cuisine = this.info()?.value;

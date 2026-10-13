@@ -41,7 +41,7 @@
   }
 }
 
-// Header with title, chefs, tags and nutrition
+// Summary
 .summary {
   display: flex;
   justify-content: space-between;
@@ -156,7 +156,7 @@
   }
 }
 
-// Ingredients and directions
+// Sections
 .section {
   display: flex;
   flex-direction: column;
@@ -274,7 +274,7 @@
   font-size: 16px;
 }
 
-// Collapsing is only offered on mobile; on larger screens both sections stay open.
+// Mobile toggle
 .toggle {
   @include button-reset;
   display: none;
@@ -298,7 +298,7 @@
   }
 }
 
-// Like call to action
+// Like
 .like {
   display: flex;
   flex-wrap: wrap;
@@ -341,7 +341,7 @@
   }
 }
 
-// Cookbook call to action
+// Cookbook CTA
 .cta {
   display: flex;
   align-items: center;

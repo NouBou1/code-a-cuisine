@@ -14,18 +14,12 @@ import { LikesTag } from '../../../shared/components/likes-tag/likes-tag';
 import { MenuBar } from '../../../shared/components/menu-bar/menu-bar';
 import { SectionBanner } from '../../../shared/components/section-banner/section-banner';
 
-/** Back link target and label. */
 interface BackLink {
   link: string | string[];
   label: string;
 }
 
-/**
- * Detail view of a single recipe with ingredients, directions and likes.
- *
- * The back link depends on where the user came from (`?from=` query param):
- * the generator results, the cookbook or a cuisine page.
- */
+/** Recipe detail; the back link depends on the `from` query param. */
 @Component({
   imports: [MenuBar, RouterLink, ChefLabel, LikesTag, SectionBanner],
   selector: 'app-recipe-detail',
@@ -38,9 +32,7 @@ export class RecipeDetail {
   private readonly store = inject(GeneratorStore);
   private readonly router = inject(Router);
 
-  /** Recipe id from the route. */
   readonly id = input.required<string>();
-  /** Origin from the query params: `results`, `cookbook` or a cuisine id. */
   readonly from = input<string>();
 
   protected readonly recipeResource = resource({
@@ -51,7 +43,6 @@ export class RecipeDetail {
     this.recipeResource.hasValue() ? this.recipeResource.value() : null,
   );
 
-  /** Like counter, updated optimistically after a like. */
   protected readonly likes = linkedSignal(() => this.recipe()?.likes ?? 0);
   protected readonly liked = computed(() => {
     const recipe = this.recipe();
@@ -59,7 +50,6 @@ export class RecipeDetail {
   });
   protected readonly likeError = signal(false);
 
-  /** Collapsible sections, only collapsible on mobile. */
   protected readonly ingredientsOpen = signal(true);
   protected readonly directionsOpen = signal(true);
 
@@ -73,7 +63,6 @@ export class RecipeDetail {
     return { link: '/cookbook', label: 'Cookbook' };
   });
 
-  /** Tags shown next to the title, e.g. `Vegetarian`, `Quick`. */
   protected readonly tags = computed(() => {
     const recipe = this.recipe();
     if (!recipe) return [];
@@ -82,12 +71,11 @@ export class RecipeDetail {
     return tags;
   });
 
-  /** Chef numbers 1..n for the chef labels in the header. */
   protected readonly chefs = computed(() =>
     Array.from({ length: this.recipe()?.cooks ?? 0 }, (_, i) => i + 1),
   );
 
-  /** Likes the recipe once per browser. */
+  /** Likes the recipe, counting optimistically. */
   protected async like(): Promise<void> {
     const recipe = this.recipe();
     if (!recipe || this.liked()) return;
@@ -101,7 +89,7 @@ export class RecipeDetail {
     }
   }
 
-  /** Starts over with a fresh generator. */
+  /** Starts a fresh generation. */
   protected generateNew(): void {
     this.store.reset();
     this.router.navigate(['/generate']);

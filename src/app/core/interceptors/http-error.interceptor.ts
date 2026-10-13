@@ -2,19 +2,13 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { TimeoutError, catchError, throwError } from 'rxjs';
 import { ApiError } from '../models/api-error.model';
 
-/**
- * Normalizes all HTTP errors to {@link ApiError}, so components only have to
- * handle a single error shape.
- */
+/** Converts every HTTP error into an `ApiError`. */
 export const httpErrorInterceptor: HttpInterceptorFn = (req, next) =>
   next(req).pipe(catchError((error: unknown) => throwError(() => toApiError(error))));
 
 /**
- * Maps an unknown error to an {@link ApiError} with a user-facing message.
- *
- * If the backend sends a JSON body like `{ code, message }`, both are taken over.
- *
- * @param error - The raw error from the HTTP pipeline.
+ * Maps an error to an `ApiError`, taking over `code` and `message` from the backend.
+ * @param error - Raw HTTP error.
  * @returns The normalized error.
  */
 export function toApiError(error: unknown): ApiError {
@@ -34,10 +28,9 @@ export function toApiError(error: unknown): ApiError {
 }
 
 /**
- * Returns a user-facing message for an HTTP status code.
- *
+ * Returns a fallback message for a status code.
  * @param status - HTTP status code.
- * @returns The message to display.
+ * @returns The message.
  */
 function messageForStatus(status: number): string {
   if (status === 0) return 'No connection to the server.';

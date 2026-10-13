@@ -15,7 +15,7 @@
   }
 }
 
-// Intro and most liked recipes
+// Intro
 .top {
   display: flex;
   gap: 32px;
@@ -144,7 +144,7 @@
   text-decoration: underline;
 }
 
-// Cuisine categories
+// Cuisines
 .cuisines {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
