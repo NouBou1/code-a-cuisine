@@ -1,0 +1,374 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+.page {
+  @include page-content;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 1356px;
+  padding-top: 48px;
+  padding-bottom: 64px;
+
+  @include mobile {
+    gap: 24px;
+    padding-top: 24px;
+  }
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 80px 0;
+  font-size: 20px;
+  text-align: center;
+}
+
+.recipe {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding: 40px 48px;
+  border: 1px solid $creme;
+  border-radius: $radius-lg;
+  background: rgba($creme, 0.3);
+
+  @include mobile {
+    gap: 32px;
+    padding: 16px;
+  }
+}
+
+// Header with title, chefs, tags and nutrition
+.summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 24px;
+  border-radius: $radius-lg;
+  background: $creme;
+
+  @include tablet {
+    flex-direction: column;
+  }
+
+  @include mobile {
+    padding: 16px;
+  }
+}
+
+.name {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 640px;
+
+  h1 {
+    font-size: 54px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: $green-dark;
+
+    @include mobile {
+      font-size: 28px;
+    }
+  }
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 20px;
+  color: $green;
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+.cooks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.chefs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 300px;
+
+  @include mobile {
+    min-width: 0;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nutrition-title {
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.per-portion {
+  font-size: 14px;
+  color: $green;
+}
+
+.nutrition {
+  display: flex;
+  gap: 24px;
+
+  dt {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  dd {
+    font-size: 20px;
+  }
+
+  @include mobile {
+    gap: 16px;
+
+    dt {
+      font-size: 16px;
+    }
+
+    dd {
+      font-size: 16px;
+    }
+  }
+}
+
+// Ingredients and directions
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+
+  h2 {
+    font-size: 32px;
+    font-weight: 600;
+
+    @include mobile {
+      font-size: 22px;
+    }
+  }
+
+  @include mobile {
+    gap: 16px;
+  }
+}
+
+.ingredients {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 32px 80px;
+
+  h3 {
+    margin-bottom: 16px;
+    font-size: 24px;
+    font-weight: 600;
+    color: $green-text;
+  }
+
+  @include mobile {
+    flex-direction: column;
+    gap: 24px;
+
+    h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+  }
+}
+
+.ingredient-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 20px;
+
+  li {
+    display: flex;
+    gap: 16px;
+
+    &::before {
+      content: '•';
+    }
+  }
+
+  .quantity {
+    min-width: 72px;
+  }
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 400px));
+  justify-content: center;
+  gap: 40px 64px;
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  p {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+}
+
+.step-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  h3 {
+    flex: 1;
+    font-size: 24px;
+    font-weight: 500;
+
+    @include mobile {
+      font-size: 18px;
+    }
+  }
+}
+
+.step-number {
+  @include flex-center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: $creme;
+  font-size: 16px;
+}
+
+// Collapsing is only offered on mobile; on larger screens both sections stay open.
+.toggle {
+  @include button-reset;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: $green-dark;
+
+  @include mobile {
+    display: inline-flex;
+  }
+
+  &[aria-expanded='true'] img {
+    transform: rotate(180deg);
+  }
+}
+
+.collapsible.closed {
+  @include mobile {
+    display: none;
+  }
+}
+
+// Like call to action
+.like {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px 24px;
+  font-size: 16px;
+
+  strong {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  @include mobile {
+    justify-content: space-between;
+    flex-wrap: nowrap;
+
+    strong {
+      display: block;
+    }
+  }
+}
+
+.heart {
+  @include button-reset;
+  flex-shrink: 0;
+  border-radius: 50%;
+  transition: transform 150ms ease;
+
+  &:hover:not(:disabled) {
+    transform: scale(1.1);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+
+  &.liked img {
+    animation: pop 300ms ease;
+  }
+}
+
+// Cookbook call to action
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  padding: 40px 24px;
+  border-radius: $radius-lg;
+  background: rgba($green, 0.1);
+  font-size: 24px;
+  text-align: center;
+
+  @include mobile {
+    justify-content: space-between;
+    padding: 16px;
+    font-size: 16px;
+    text-align: left;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@keyframes pop {
+  50% {
+    transform: scale(1.25);
+  }
+}

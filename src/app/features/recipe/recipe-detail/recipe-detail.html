@@ -1,0 +1,186 @@
+<app-menu-bar [backLink]="back().link" [backLabel]="back().label" />
+
+<main class="page">
+  @if (recipeResource.isLoading()) {
+    <p class="status" role="status">Loading recipe...</p>
+  } @else if (recipeResource.error()) {
+    <div class="status" role="alert">
+      <p>The recipe could not be loaded. Please try again.</p>
+      <button type="button" class="btn-primary" (click)="recipeResource.reload()">Retry</button>
+    </div>
+  } @else if (recipe(); as recipe) {
+    <article class="recipe">
+      <header class="summary">
+        <div class="name">
+          <p class="meta">
+            <img src="assets/icons/schedule.svg" alt="" width="20" height="20" />
+            Cooking time: {{ recipe.durationMinutes }}min
+          </p>
+          <h1>{{ recipe.title }}</h1>
+          <div class="cooks">
+            <p class="meta">Cooking persons: {{ recipe.cooks }}</p>
+            @if (recipe.cooks > 1) {
+              <ul class="chefs">
+                @for (chef of chefs(); track chef) {
+                  <li><app-chef-label [chef]="chef" /></li>
+                }
+              </ul>
+            }
+          </div>
+        </div>
+
+        <div class="facts">
+          <ul class="tags" aria-label="Tags">
+            @for (tag of tags(); track tag) {
+              <li class="tag">{{ tag }}</li>
+            }
+            <li><app-likes-tag [count]="likes()" /></li>
+          </ul>
+          <section aria-labelledby="nutrition-title">
+            <h2 id="nutrition-title" class="nutrition-title">
+              Nutritional information <span class="per-portion">(per portion)</span>
+            </h2>
+            <dl class="nutrition">
+              <div>
+                <dt>Energy</dt>
+                <dd>{{ recipe.nutrition.kcal }} kcal</dd>
+              </div>
+              <div>
+                <dt>Protein</dt>
+                <dd>{{ recipe.nutrition.protein }}g</dd>
+              </div>
+              <div>
+                <dt>Fat</dt>
+                <dd>{{ recipe.nutrition.fat }}g</dd>
+              </div>
+              <div>
+                <dt>Carbs</dt>
+                <dd>{{ recipe.nutrition.carbs }}g</dd>
+              </div>
+            </dl>
+          </section>
+        </div>
+      </header>
+
+      <section class="section" aria-labelledby="ingredients-title">
+        <app-section-banner image="assets/heroes/recipe-ingredients.webp">
+          <h2 id="ingredients-title">Ingredients</h2>
+        </app-section-banner>
+        <div id="ingredients-content" class="collapsible" [class.closed]="!ingredientsOpen()">
+          <div class="ingredients">
+            <div>
+              <h3>Your ingredients</h3>
+              <ul class="ingredient-list">
+                @for (item of recipe.ingredients; track $index) {
+                  <li>
+                    <span class="quantity">{{ item.quantity }}</span>
+                    <span>{{ item.name }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+            @if (recipe.extraIngredients.length) {
+              <div>
+                <h3>Extra ingredients</h3>
+                <ul class="ingredient-list">
+                  @for (item of recipe.extraIngredients; track $index) {
+                    <li>
+                      <span class="quantity">{{ item.quantity }}</span>
+                      <span>{{ item.name }}</span>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+        </div>
+        <button
+          type="button"
+          class="toggle"
+          aria-controls="ingredients-content"
+          [attr.aria-expanded]="ingredientsOpen()"
+          (click)="ingredientsOpen.set(!ingredientsOpen())"
+        >
+          {{ ingredientsOpen() ? 'Hide' : 'Show' }} ingredients
+          <img src="assets/icons/arrow-drop-down.svg" alt="" width="10" height="5" />
+        </button>
+      </section>
+
+      <section class="section" aria-labelledby="directions-title">
+        <app-section-banner image="assets/heroes/recipe-directions.webp">
+          <h2 id="directions-title">Directions</h2>
+        </app-section-banner>
+        <div id="directions-content" class="collapsible" [class.closed]="!directionsOpen()">
+          <ol class="steps">
+            @for (step of recipe.steps; track $index; let i = $index) {
+              <li class="step">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">{{ i + 1 }}.</span>
+                  <h3>{{ step.title }}</h3>
+                  @if (recipe.cooks > 1) {
+                    <app-chef-label [chef]="step.chef" />
+                  }
+                </div>
+                <p>{{ step.description }}</p>
+              </li>
+            }
+          </ol>
+        </div>
+        <button
+          type="button"
+          class="toggle"
+          aria-controls="directions-content"
+          [attr.aria-expanded]="directionsOpen()"
+          (click)="directionsOpen.set(!directionsOpen())"
+        >
+          {{ directionsOpen() ? 'Hide' : 'Show' }} directions
+          <img src="assets/icons/arrow-drop-down.svg" alt="" width="10" height="5" />
+        </button>
+      </section>
+
+      <footer class="like">
+        <p>
+          <strong>Just finished this meal?</strong>
+          Give it a heart, so that the others know this is delicious.
+        </p>
+        <button
+          type="button"
+          class="heart"
+          [class.liked]="liked()"
+          [attr.aria-pressed]="liked()"
+          [attr.aria-label]="liked() ? 'You liked this recipe' : 'Like this recipe'"
+          [disabled]="liked()"
+          (click)="like()"
+        >
+          <img
+            [src]="liked() ? 'assets/icons/heart-filled.svg' : 'assets/icons/heart.svg'"
+            alt=""
+            width="52"
+            height="48"
+          />
+        </button>
+        @if (likeError()) {
+          <p class="field-error" role="alert">Your like could not be saved. Please try again.</p>
+        }
+      </footer>
+    </article>
+
+    <aside class="cta">
+      <p>Find inspiration for your next culinary adventure!</p>
+      <a routerLink="/cookbook" class="btn-primary">Cookbook</a>
+    </aside>
+
+    <div class="actions">
+      <button type="button" class="btn-secondary" (click)="generateNew()">
+        Generate new recipe
+        <img src="assets/icons/arrow-right.svg" alt="" width="26" height="15" />
+      </button>
+    </div>
+  } @else {
+    <div class="status">
+      <h1>Recipe not found</h1>
+      <p>This recipe doesn’t exist (anymore).</p>
+      <a routerLink="/cookbook" class="btn-primary">Go to cookbook</a>
+    </div>
+  }
+</main>
