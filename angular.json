@@ -29,7 +29,20 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": [
+              "@fontsource/quicksand/latin-500.css",
+              "@fontsource/quicksand/latin-600.css",
+              "@fontsource/quicksand/latin-700.css",
+              "@fontsource/ubuntu/latin-500.css",
+              "@fontsource/ubuntu/latin-700.css",
+              "@fontsource/mulish/latin-500.css",
+              "src/styles.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src"
+              ]
+            }
           },
           "configurations": {
             "production": {
@@ -41,8 +54,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "6kB",
+                  "maximumError": "12kB"
                 }
               ],
               "outputHashing": "all"
