@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header } from './shared/components/header/header';
-import { Footer } from './shared/components/footer/footer';
 
 /**
- * Root component providing the page layout (header, main content, footer).
+ * Root component. Each page renders its own menu bar, because logo color
+ * and back link depend on the page.
  */
 @Component({
-  imports: [RouterOutlet, Header, Footer],
+  imports: [RouterOutlet],
   selector: 'app-root',
-  styleUrl: './app.scss',
-  templateUrl: './app.html',
+  template: '<router-outlet />',
 })
 export class App {}

@@ -1,0 +1,21 @@
+<header class="menu-bar">
+  <a routerLink="/" class="logo" aria-label="Code à Cuisine – Home">
+    <img
+      [src]="theme() === 'dark' ? 'assets/logo/logo-creme.svg' : 'assets/logo/logo-green.svg'"
+      alt=""
+      width="142"
+      height="48"
+    />
+  </a>
+  @if (backLink(); as link) {
+    <a class="back" [routerLink]="link" [queryParams]="backQueryParams()">
+      <svg width="22" height="15" viewBox="0 0 22 15" aria-hidden="true">
+        <path
+          d="M21 8.364a1 1 0 1 0 0-2v2ZM.293 6.657a1 1 0 0 0 0 1.414l6.364 6.364a1 1 0 0 0 1.414-1.414L2.414 7.364l5.657-5.657A1 1 0 0 0 6.657.293L.293 6.657ZM21 6.364H1v2h20v-2Z"
+          fill="currentColor"
+        />
+      </svg>
+      <span>{{ backLabel() }}</span>
+    </a>
+  }
+</header>

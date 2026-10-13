@@ -1,0 +1,51 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+:host {
+  display: block;
+  color: $green-dark;
+
+  &.dark {
+    color: $creme;
+  }
+}
+
+.menu-bar {
+  @include page-content;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  padding-top: 40px;
+
+  @include mobile {
+    gap: 12px;
+    padding-top: 16px;
+  }
+}
+
+.logo img {
+  height: 48px;
+  width: auto;
+
+  @include mobile {
+    height: 40px;
+  }
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+
+  &:hover span {
+    text-decoration: underline;
+  }
+
+  @include mobile {
+    span {
+      display: none;
+    }
+  }
+}
