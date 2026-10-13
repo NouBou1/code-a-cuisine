@@ -1,0 +1,69 @@
+<app-menu-bar backLink="/cookbook" backLabel="Cookbook" />
+
+<main class="page">
+  @if (info(); as cuisine) {
+    <div class="actions">
+      <button type="button" class="btn-primary" (click)="generate()">Generate a recipe</button>
+    </div>
+
+    <app-section-banner [image]="cuisine.hero">
+      <h1>{{ cuisine.label }} cuisine</h1>
+    </app-section-banner>
+
+    @if (recipes.isLoading()) {
+      <p class="status" role="status">Loading recipes...</p>
+    } @else if (recipes.error()) {
+      <div class="status" role="alert">
+        <p>The recipes could not be loaded.</p>
+        <button type="button" class="btn-primary" (click)="recipes.reload()">Retry</button>
+      </div>
+    } @else if (pageRecipes().length) {
+      <ol class="list" [attr.start]="offset() + 1">
+        @for (recipe of pageRecipes(); track recipe.id; let i = $index) {
+          <li>
+            <a
+              class="row"
+              [routerLink]="['/recipe', recipe.id]"
+              [queryParams]="{ from: cuisine.value }"
+            >
+              <span class="number" aria-hidden="true">{{ offset() + i + 1 }}.</span>
+              <span class="text">
+                <span class="time">
+                  <img src="assets/icons/schedule.svg" alt="" width="16" height="16" />
+                  Cooking time: {{ recipe.durationMinutes }}min
+                </span>
+                <span class="title">{{ recipe.title }}</span>
+              </span>
+              <span class="tags">
+                @for (tag of tagsOf(recipe); track tag) {
+                  <span class="tag">{{ tag }}</span>
+                }
+                <app-likes-tag [count]="recipe.likes" />
+              </span>
+            </a>
+          </li>
+        }
+      </ol>
+
+      @if (totalPages() > 1) {
+        <app-pagination
+          [page]="currentPage()"
+          [totalPages]="totalPages()"
+          (pageChange)="goToPage($event)"
+        />
+      }
+    } @else {
+      <div class="status">
+        <p>No {{ cuisine.label }} recipes yet.</p>
+        <button type="button" class="btn-primary" (click)="generate()">
+          Generate the first one
+        </button>
+      </div>
+    }
+  } @else {
+    <div class="status">
+      <h1>Cuisine not found</h1>
+      <a routerLink="/cookbook" class="btn-primary">Go to cookbook</a>
+    </div>
+  }
+</main>
