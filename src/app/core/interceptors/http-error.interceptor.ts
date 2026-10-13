@@ -12,17 +12,25 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) =>
 /**
  * Maps an unknown error to an {@link ApiError} with a user-facing message.
  *
+ * If the backend sends a JSON body like `{ code, message }`, both are taken over.
+ *
  * @param error - The raw error from the HTTP pipeline.
  * @returns The normalized error.
  */
 export function toApiError(error: unknown): ApiError {
   if (error instanceof TimeoutError) {
-    return { status: 0, message: 'Die Anfrage hat zu lange gedauert.', cause: error };
+    return { status: 0, message: 'The request took too long. Please try again.', cause: error };
   }
   if (error instanceof HttpErrorResponse) {
-    return { status: error.status, message: messageForStatus(error.status), cause: error };
+    const body = typeof error.error === 'object' && error.error !== null ? error.error : {};
+    return {
+      status: error.status,
+      code: typeof body.code === 'string' ? body.code : undefined,
+      message: typeof body.message === 'string' ? body.message : messageForStatus(error.status),
+      cause: error,
+    };
   }
-  return { status: 0, message: 'Ein unbekannter Fehler ist aufgetreten.', cause: error };
+  return { status: 0, message: 'An unknown error occurred.', cause: error };
 }
 
 /**
@@ -32,9 +40,10 @@ export function toApiError(error: unknown): ApiError {
  * @returns The message to display.
  */
 function messageForStatus(status: number): string {
-  if (status === 0) return 'Keine Verbindung zum Server.';
-  if (status === 400 || status === 422) return 'Die Eingaben sind ungültig.';
-  if (status === 404) return 'Der angefragte Dienst wurde nicht gefunden.';
-  if (status >= 500) return 'Der Server ist gerade nicht erreichbar.';
-  return 'Die Anfrage ist fehlgeschlagen.';
+  if (status === 0) return 'No connection to the server.';
+  if (status === 400 || status === 422) return 'Your input is not valid.';
+  if (status === 404) return 'The requested service could not be found.';
+  if (status === 429) return 'Too many requests. Please wait a moment.';
+  if (status >= 500) return 'The server is currently not available.';
+  return 'The request failed.';
 }
