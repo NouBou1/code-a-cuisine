@@ -1,0 +1,64 @@
+<div class="results-page">
+  <app-menu-bar theme="dark" />
+
+  <main class="page">
+    <section class="intro" aria-labelledby="results-title">
+      <div class="text">
+        <h1 id="results-title">The recipe results</h1>
+        <p>
+          We took what you have and let our AI do the thinking. Here are
+          {{ store.results().length }} easy recipes you can make right now!
+        </p>
+        <ul class="tags" aria-label="Your preferences">
+          @for (tag of tags(); track tag) {
+            <li class="tag tag--creme">{{ tag }}</li>
+          }
+        </ul>
+      </div>
+      <img
+        class="visual"
+        src="assets/images/results-robot.webp"
+        alt="A robot arm serving a dish under a silver cloche"
+        width="574"
+        height="222"
+      />
+    </section>
+
+    <ol class="cards">
+      @for (recipe of store.results(); track recipe.id; let i = $index) {
+        <li class="card">
+          <article>
+            <p class="number">
+              <img src="assets/icons/cloche.webp" alt="" width="40" height="28" />
+              Recipe {{ i + 1 }}
+            </p>
+            <h2>{{ recipe.title }}</h2>
+            <p class="time">
+              <img src="assets/icons/schedule.svg" alt="" width="20" height="20" />
+              Cooking time: {{ recipe.durationMinutes }}min
+            </p>
+            <a
+              class="btn-primary btn-primary--creme"
+              [routerLink]="['/recipe', recipe.id]"
+              [queryParams]="{ from: 'results' }"
+            >
+              View<span class="sr-only">: {{ recipe.title }}</span>
+            </a>
+          </article>
+        </li>
+      }
+    </ol>
+
+    <div class="actions">
+      <button type="button" class="btn-secondary btn-secondary--creme" (click)="generateNew()">
+        Generate new recipe
+        <svg width="26" height="15" viewBox="0 0 26 15" aria-hidden="true">
+          <path
+            d="M1 6.364a1 1 0 1 0 0 2v-2Zm24.707 1.707a1 1 0 0 0 0-1.414L19.343.293a1 1 0 0 0-1.414 1.414l5.657 5.657-5.657 5.657a1 1 0 0 0 1.414 1.414l6.364-6.364ZM1 8.364h24v-2H1v2Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    </div>
+  </main>
+</div>
