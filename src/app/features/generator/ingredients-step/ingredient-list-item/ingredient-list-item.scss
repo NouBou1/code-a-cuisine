@@ -1,0 +1,66 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 30px;
+  padding: 2px 8px;
+  border-radius: $radius-sm;
+  font-size: 18px;
+  color: #000;
+
+  &:hover:not(.editing) {
+    background: $creme;
+  }
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+.details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.amount-text {
+  min-width: 56px;
+}
+
+.name {
+  overflow-wrap: anywhere;
+}
+
+.amount {
+  width: 72px;
+  padding: 0 12px;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  @include button-reset;
+  @include flex-center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+
+  &:hover:not(:disabled) {
+    background: rgba($green, 0.15);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}

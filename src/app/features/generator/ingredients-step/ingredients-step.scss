@@ -1,0 +1,172 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+.page {
+  @include page-content;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  max-width: 1300px;
+  padding-top: 48px;
+  padding-bottom: 80px;
+
+  @include mobile {
+    gap: 32px;
+    padding-top: 24px;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  text-align: center;
+
+  h1 {
+    font-size: 54px;
+    font-weight: 600;
+    color: $green-dark;
+  }
+
+  p {
+    font-size: 24px;
+  }
+
+  @include mobile {
+    gap: 16px;
+    text-align: left;
+
+    h1 {
+      font-size: 32px;
+    }
+
+    p {
+      font-size: 18px;
+    }
+  }
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: 577fr 478fr;
+  align-items: start;
+  gap: 32px;
+
+  @include tablet {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  padding: 24px 32px;
+  border-radius: $radius-lg;
+  background: rgba($green, 0.3);
+
+  @include mobile {
+    padding: 20px 16px;
+  }
+}
+
+.input-panel {
+  display: flex;
+  gap: 24px;
+
+  @include mobile {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: none;
+
+  label,
+  legend {
+    font-size: 20px;
+  }
+
+  legend {
+    margin-bottom: 16px;
+  }
+
+  @include mobile {
+    gap: 12px;
+
+    label,
+    legend {
+      font-size: 18px;
+    }
+  }
+}
+
+.name-field {
+  flex: 1;
+}
+
+.amount-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.amount {
+  width: 80px;
+  padding: 0 12px;
+  text-align: center;
+}
+
+.add-btn {
+  @include button-reset;
+  @include flex-center;
+  width: 36px;
+  height: 36px;
+  border-radius: 5px;
+
+  &:hover:not(:disabled) {
+    background: $creme;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.field-error {
+  min-height: 18px;
+}
+
+.list-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.empty {
+  min-height: 92px;
+  font-size: 16px;
+  color: rgba($green-darkest, 0.6);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+
+  @include mobile {
+    justify-content: center;
+  }
+}

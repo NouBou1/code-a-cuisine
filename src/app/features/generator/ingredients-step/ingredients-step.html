@@ -1,0 +1,105 @@
+<app-menu-bar />
+
+<main class="page">
+  <header class="header">
+    <h1>Generate recipe</h1>
+    <p>Got random stuff in your kitchen? Pop it in—we’ve got the perfect recipe waiting.</p>
+  </header>
+
+  <div class="panels">
+    <form class="panel input-panel" [formGroup]="form" (ngSubmit)="add()" novalidate>
+      <div class="field name-field">
+        <label for="ingredient-name">Ingredient</label>
+        <input
+          #nameInput
+          id="ingredient-name"
+          class="pill-input"
+          [class.invalid]="showError('name')"
+          type="text"
+          formControlName="name"
+          autocomplete="off"
+          placeholder="e.g. Pasta"
+          [attr.maxlength]="maxNameLength"
+          [attr.aria-invalid]="showError('name')"
+          aria-describedby="name-error"
+        />
+        <p id="name-error" class="field-error" aria-live="polite">
+          @if (showError('name')) {
+            @if (form.controls.name.hasError('required')) {
+              Please enter an ingredient.
+            } @else if (form.controls.name.hasError('maxlength')) {
+              Use at most {{ maxNameLength }} characters.
+            } @else {
+              Please use letters only.
+            }
+          }
+        </p>
+      </div>
+
+      <fieldset class="field amount-field">
+        <legend>Serving size</legend>
+        <div class="amount-row">
+          <label class="sr-only" for="ingredient-amount">Amount</label>
+          <input
+            id="ingredient-amount"
+            class="pill-input amount"
+            [class.invalid]="showError('amount')"
+            type="number"
+            formControlName="amount"
+            min="0.1"
+            [max]="maxAmount"
+            step="any"
+            [attr.aria-invalid]="showError('amount')"
+            aria-describedby="amount-error"
+          />
+          <label class="sr-only" for="ingredient-unit">Unit</label>
+          <select id="ingredient-unit" class="pill-select" formControlName="unit">
+            @for (unit of units; track unit) {
+              <option [value]="unit">{{ unit }}</option>
+            }
+          </select>
+          <button
+            type="submit"
+            class="add-btn"
+            aria-label="Add ingredient to the list"
+            [disabled]="!store.canAddIngredient()"
+          >
+            <img src="assets/icons/add.svg" alt="" width="24" height="24" />
+          </button>
+        </div>
+        <p id="amount-error" class="field-error" aria-live="polite">
+          @if (showError('amount')) {
+            Please enter an amount between 0.1 and {{ maxAmount }}.
+          } @else if (!store.canAddIngredient()) {
+            You can add up to {{ maxIngredients }} ingredients.
+          }
+        </p>
+      </fieldset>
+    </form>
+
+    <section class="panel list-panel" aria-labelledby="ingredient-list-title">
+      <h2 id="ingredient-list-title">List of your Ingredients</h2>
+      @if (store.ingredients().length) {
+        <ul class="list">
+          @for (ingredient of store.ingredients(); track ingredient.id) {
+            <li>
+              <app-ingredient-list-item
+                [ingredient]="ingredient"
+                (changed)="update(ingredient.id, ingredient.name, $event)"
+                (removed)="store.removeIngredient(ingredient.id)"
+              />
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="empty">Your added ingredients will show up here.</p>
+      }
+    </section>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn-primary" [disabled]="!store.hasIngredients()" (click)="next()">
+      Next step
+    </button>
+  </div>
+</main>

@@ -1,0 +1,74 @@
+@if (editing()) {
+  <form class="item editing" (ngSubmit)="confirm()" (keydown.escape)="cancel()">
+    <div class="details">
+      <span class="bullet" aria-hidden="true">•</span>
+      <label class="sr-only" [for]="'amount-' + ingredient().id">Amount</label>
+      <input
+        #amountInput
+        [id]="'amount-' + ingredient().id"
+        class="pill-input amount"
+        [class.invalid]="!amountValid()"
+        type="number"
+        name="amount"
+        min="0.1"
+        [max]="maxAmount"
+        step="any"
+        required
+        [ngModel]="amount()"
+        (ngModelChange)="amount.set($event)"
+      />
+      <label class="sr-only" [for]="'unit-' + ingredient().id">Unit</label>
+      <select
+        [id]="'unit-' + ingredient().id"
+        class="pill-select"
+        name="unit"
+        [ngModel]="unit()"
+        (ngModelChange)="unit.set($event)"
+      >
+        @for (u of units; track u) {
+          <option [value]="u">{{ u }}</option>
+        }
+      </select>
+      <span class="name">{{ ingredient().name }}</span>
+    </div>
+    <div class="actions">
+      <button type="submit" class="icon-btn" aria-label="Save changes" [disabled]="!amountValid()">
+        <img src="assets/icons/check.svg" alt="" width="19" height="19" />
+      </button>
+      <button
+        type="button"
+        class="icon-btn"
+        aria-label="Delete ingredient"
+        (click)="removed.emit()"
+      >
+        <img src="assets/icons/delete.svg" alt="" width="19" height="19" />
+      </button>
+    </div>
+  </form>
+} @else {
+  <div class="item">
+    <div class="details">
+      <span class="bullet" aria-hidden="true">•</span>
+      <span class="amount-text">{{ displayAmount() }}</span>
+      <span class="name">{{ ingredient().name }}</span>
+    </div>
+    <div class="actions">
+      <button
+        type="button"
+        class="icon-btn"
+        [attr.aria-label]="'Edit ' + ingredient().name"
+        (click)="startEdit()"
+      >
+        <img src="assets/icons/edit.svg" alt="" width="19" height="19" />
+      </button>
+      <button
+        type="button"
+        class="icon-btn"
+        [attr.aria-label]="'Delete ' + ingredient().name"
+        (click)="removed.emit()"
+      >
+        <img src="assets/icons/delete.svg" alt="" width="19" height="19" />
+      </button>
+    </div>
+  </div>
+}
