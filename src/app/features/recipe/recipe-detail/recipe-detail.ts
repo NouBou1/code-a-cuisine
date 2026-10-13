@@ -6,7 +6,7 @@ import {
   findCuisine,
   labelOf,
 } from '../../../core/constants/options';
-import { RecipeRepository } from '../../../core/data/recipe-repository';
+import { CookbookService } from '../../../core/data/cookbook.service';
 import { LikeService } from '../../../core/services/like.service';
 import { GeneratorStore } from '../../../core/state/generator.store';
 import { ChefLabel } from '../../../shared/components/chef-label/chef-label';
@@ -33,7 +33,7 @@ interface BackLink {
   templateUrl: './recipe-detail.html',
 })
 export class RecipeDetail {
-  private readonly repository = inject(RecipeRepository);
+  private readonly cookbook = inject(CookbookService);
   private readonly likeService = inject(LikeService);
   private readonly store = inject(GeneratorStore);
   private readonly router = inject(Router);
@@ -45,7 +45,7 @@ export class RecipeDetail {
 
   protected readonly recipeResource = resource({
     params: () => this.id(),
-    loader: ({ params }) => this.repository.getById(params),
+    loader: ({ params }) => this.cookbook.getById(params),
   });
   protected readonly recipe = computed(() =>
     this.recipeResource.hasValue() ? this.recipeResource.value() : null,

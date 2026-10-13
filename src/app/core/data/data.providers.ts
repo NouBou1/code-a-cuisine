@@ -1,27 +1,26 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { FirestoreRecipeRepository } from './firestore-recipe-repository';
+import { FirestoreCookbookService } from './firestore-cookbook.service';
 import { MockRecipeGenerator } from './mock/mock-recipe-generator';
-import { MockRecipeRepository } from './mock/mock-recipe-repository';
+import { MockCookbookService } from './mock/mock-cookbook.service';
 import { N8nRecipeGenerator } from './n8n-recipe-generator';
 import { RecipeGenerator } from './recipe-generator';
-import { RecipeRepository } from './recipe-repository';
+import { CookbookService } from './cookbook.service';
 
 /**
- * Registers the recipe data layer.
- *
- * @param useMock - `true` to use in-memory mocks instead of n8n and Firestore.
- * @returns Environment providers for `app.config.ts`.
+ * Registers generator and cookbook, either real or mocked.
+ * @param useMock - `true` to use mocks instead of n8n and Firestore.
+ * @returns Providers for `app.config.ts`.
  */
 export function provideRecipeData(useMock: boolean): EnvironmentProviders {
   return makeEnvironmentProviders(
     useMock
       ? [
           { provide: RecipeGenerator, useClass: MockRecipeGenerator },
-          { provide: RecipeRepository, useExisting: MockRecipeRepository },
+          { provide: CookbookService, useExisting: MockCookbookService },
         ]
       : [
           { provide: RecipeGenerator, useClass: N8nRecipeGenerator },
-          { provide: RecipeRepository, useClass: FirestoreRecipeRepository },
+          { provide: CookbookService, useClass: FirestoreCookbookService },
         ],
   );
 }

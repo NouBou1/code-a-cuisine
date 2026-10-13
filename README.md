@@ -52,7 +52,7 @@ Den API-Vertrag für den n8n-Workflow und die Firestore-Regeln beschreibt [n8n/R
 src/app/
 ├── core/
 │   ├── constants/     # Auswahloptionen (Küchen, Kochzeiten, Ernährung)
-│   ├── data/          # RecipeGenerator & RecipeRepository (n8n/Firestore + Mock)
+│   ├── data/          # RecipeGenerator & CookbookService (n8n/Firestore + Mock)
 │   ├── firebase/      # Firebase-/Firestore-Provider
 │   ├── guards/        # Schutz der Generator-Schritte
 │   ├── interceptors/  # Zentrale HTTP-Fehlerbehandlung

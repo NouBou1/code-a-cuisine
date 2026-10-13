@@ -6,7 +6,7 @@ import {
   findCuisine,
   labelOf,
 } from '../../../core/constants/options';
-import { RecipeRepository } from '../../../core/data/recipe-repository';
+import { CookbookService } from '../../../core/data/cookbook.service';
 import { Recipe } from '../../../core/models/recipe.model';
 import { GeneratorStore } from '../../../core/state/generator.store';
 import { LikesTag } from '../../../shared/components/likes-tag/likes-tag';
@@ -27,7 +27,7 @@ export const PAGE_SIZE = 15;
   templateUrl: './cuisine-recipes.html',
 })
 export class CuisineRecipes {
-  private readonly repository = inject(RecipeRepository);
+  private readonly cookbook = inject(CookbookService);
   private readonly store = inject(GeneratorStore);
   private readonly router = inject(Router);
 
@@ -40,7 +40,7 @@ export class CuisineRecipes {
 
   protected readonly recipes = resource({
     params: () => this.info()?.value,
-    loader: ({ params }) => this.repository.getByCuisine(params),
+    loader: ({ params }) => this.cookbook.getByCuisine(params),
   });
 
   protected readonly totalPages = computed(() =>

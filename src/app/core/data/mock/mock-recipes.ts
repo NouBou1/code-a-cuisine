@@ -1,14 +1,9 @@
 import { Recipe } from '../../models/recipe.model';
 
-/** Day in milliseconds, used to spread the seed recipes over time. */
 const DAY = 86_400_000;
-
-/** Fixed reference date so the seed data is deterministic. */
 const BASE = Date.UTC(2026, 9, 1);
 
-/**
- * Seed recipes for the mock repository, covering all cuisines.
- */
+/** Seed recipes for the mock cookbook. */
 export const MOCK_RECIPES: Recipe[] = [
   {
     id: 'mock-pasta-spinach',

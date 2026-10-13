@@ -3,20 +3,14 @@ import { limit, orderBy, where } from 'firebase/firestore';
 import { Cuisine } from '../models/preferences.model';
 import { Recipe } from '../models/recipe.model';
 import { FirestoreService } from '../services/firestore.service';
-import { RecipeRepository } from './recipe-repository';
+import { CookbookService } from './cookbook.service';
 import { isRecipe } from './recipe.validation';
 
-/** Firestore collection holding all generated recipes. */
 export const RECIPES_COLLECTION = 'recipes';
 
-/**
- * Reads recipes from Firestore. Recipes are written by the n8n workflow.
- *
- * Note: the `cuisine` + `createdAt` query requires a composite index, which
- * Firestore offers to create via a link in the browser console on first use.
- */
+/** Reads the recipes the n8n workflow stored in Firestore. */
 @Injectable()
-export class FirestoreRecipeRepository extends RecipeRepository {
+export class FirestoreCookbookService extends CookbookService {
   private readonly firestore = inject(FirestoreService);
 
   /** @inheritdoc */

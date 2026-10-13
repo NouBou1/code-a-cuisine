@@ -6,36 +6,23 @@ import { Ingredient, formatAmount } from '../../models/ingredient.model';
 import { CookingTime } from '../../models/preferences.model';
 import { Recipe, RecipeStep } from '../../models/recipe.model';
 import { RecipeGenerator } from '../recipe-generator';
-import { MockRecipeRepository } from './mock-recipe-repository';
+import { MockCookbookService } from './mock-cookbook.service';
 
-/** Simulated network and AI latency in milliseconds. */
 const LATENCY_MS = 2500;
-
-/** Minimum total amount in grams (or ml) per portion the mock accepts. */
 const MIN_AMOUNT_PER_PORTION = 100;
-
-/** Weight in grams assumed for one piece, e.g. one egg. */
 const GRAMS_PER_PIECE = 100;
-
-/** Typical duration per cooking time category. */
 const DURATION: Record<CookingTime, number> = { quick: 20, medium: 35, complex: 55 };
 
-/** Title patterns for the generated mock recipes. */
 const TITLE_PATTERNS = [
   (main: string, side: string) => `${main} with ${side.toLowerCase()}`,
   (main: string, side: string) => `Creamy ${main.toLowerCase()} and ${side.toLowerCase()} bake`,
   (main: string, side: string) => `${main} ${side.toLowerCase()} bowl`,
 ];
 
-/**
- * Fake recipe generator, used until the n8n workflow is connected.
- *
- * Mimics the workflow's validation: if the ingredient amounts are too small
- * for the requested portions it fails with `INSUFFICIENT_INGREDIENTS`.
- */
+/** Fake generator until n8n is connected; fails like the workflow on too few ingredients. */
 @Injectable()
 export class MockRecipeGenerator extends RecipeGenerator {
-  private readonly repository = inject(MockRecipeRepository);
+  private readonly cookbook = inject(MockCookbookService);
 
   /** @inheritdoc */
   generate(request: GenerateRecipesRequest): Observable<Recipe[]> {
@@ -46,19 +33,18 @@ export class MockRecipeGenerator extends RecipeGenerator {
         message:
           'It looks like some ingredient quantities aren’t sufficient for your selected servings. Please add or adjust quantities and try again.',
       };
-      // delay() only delays values, so the error is thrown after a timer instead.
       return timer(LATENCY_MS).pipe(switchMap(() => throwError(() => error)));
     }
     const recipes = buildRecipes(request);
-    this.repository.add(recipes);
+    this.cookbook.add(recipes);
     return of(recipes).pipe(delay(LATENCY_MS));
   }
 }
 
 /**
- * Checks whether the total ingredient amount suffices for the requested portions.
- *
+ * Checks whether the ingredient amounts suffice for the portions.
  * @param request - The generation request.
+ * @returns `true` if there is enough.
  */
 export function hasEnoughIngredients({
   ingredients,
@@ -72,12 +58,11 @@ export function hasEnoughIngredients({
 }
 
 /**
- * Builds plausible looking recipes from the request.
- *
+ * Builds fake recipes from the request.
  * @param request - The generation request.
+ * @returns The generated recipes.
  */
 function buildRecipes({ ingredients, preferences }: GenerateRecipesRequest): Recipe[] {
-  // The list is newest first; the first entered ingredient is the main one.
   const names = [...ingredients].reverse().map((i) => i.name);
   const main = names[0];
   const side = names[1] ?? 'fresh herbs';
@@ -104,9 +89,9 @@ function buildRecipes({ ingredients, preferences }: GenerateRecipesRequest): Rec
 }
 
 /**
- * Formats an ingredient amount for a recipe, e.g. `100g` or `2 pieces`.
- *
- * @param ingredient - Amount and unit of the ingredient.
+ * Formats an amount for a recipe, e.g. `100g` or `2 pieces`.
+ * @param ingredient - Amount and unit.
+ * @returns The formatted quantity.
  */
 function formatQuantity({ amount, unit }: Omit<Ingredient, 'id' | 'name'>): string {
   if (unit !== 'piece') return formatAmount(amount, unit);
@@ -114,10 +99,10 @@ function formatQuantity({ amount, unit }: Omit<Ingredient, 'id' | 'name'>): stri
 }
 
 /**
- * Creates generic preparation steps and distributes them across the chefs.
- *
+ * Creates generic steps and distributes them across the chefs.
  * @param names - Ingredient names.
  * @param cooks - Number of chefs.
+ * @returns The steps.
  */
 function buildSteps(names: string[], cooks: number): RecipeStep[] {
   const steps = [
