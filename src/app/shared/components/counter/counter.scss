@@ -1,0 +1,41 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+.step {
+  @include button-reset;
+  @include flex-center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+
+  &:hover:not(:disabled) {
+    background: $green-mist;
+  }
+
+  &:active:not(:disabled) {
+    background: $green-pale;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+.value {
+  min-width: 22px;
+  padding: 0 5px;
+  text-align: center;
+  background: rgba($green, 0.2);
+}

@@ -1,0 +1,22 @@
+<div class="counter">
+  <button
+    type="button"
+    class="step"
+    (click)="decrement()"
+    [disabled]="value() <= min()"
+    [attr.aria-label]="'Fewer ' + plural()"
+  >
+    <img src="assets/icons/minus.svg" alt="" width="20" height="20" />
+  </button>
+  <output class="value" aria-live="polite">{{ value() }}</output>
+  <span>{{ unit() }}</span>
+  <button
+    type="button"
+    class="step"
+    (click)="increment()"
+    [disabled]="value() >= max()"
+    [attr.aria-label]="'More ' + plural()"
+  >
+    <img src="assets/icons/plus.svg" alt="" width="20" height="20" />
+  </button>
+</div>

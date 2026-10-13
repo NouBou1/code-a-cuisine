@@ -1,0 +1,38 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-size: 18px;
+  white-space: nowrap;
+  background: $chef-1;
+
+  @include mobile {
+    font-size: 14px;
+  }
+}
+
+:host([data-chef='2']) {
+  background: $chef-2;
+}
+
+:host([data-chef='3']) {
+  background: $chef-3;
+}
+
+:host([data-chef='4']) {
+  background: $chef-4;
+}
+
+img {
+  width: auto;
+  height: 22px;
+
+  @include mobile {
+    height: 18px;
+  }
+}

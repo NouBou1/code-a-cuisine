@@ -1,0 +1,24 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+:host {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 1152px;
+  margin-inline: auto;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+.title {
+  position: absolute;
+  inset: 0;
+  @include flex-center;
+  padding-inline: 18%;
+  text-align: center;
+  color: $green-dark;
+}
