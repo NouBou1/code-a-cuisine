@@ -45,3 +45,11 @@ Thumbs.db
 
 # Generated documentation
 /docs
+
+# Firebase
+.firebase/
+*-debug.log
+
+# Never commit credentials
+*service-account*.json
+*-sa.json

@@ -1,4 +1,4 @@
-import { Recipe } from '../../models/recipe.model';
+import type { Recipe } from '../../models/recipe.model';
 
 const DAY = 86_400_000;
 const BASE = Date.UTC(2026, 9, 1);
