@@ -35,7 +35,13 @@ In `src/environments/environment.ts` (Produktion) und `environment.development.t
 2. `firebase` – Web-App-Config aus der Firebase-Konsole (Projekteinstellungen → Meine Apps)
 3. `n8n.baseUrl` – z. B. `https://n8n.example.com/webhook` (Entwicklung: `/webhook-test`)
 
-Den API-Vertrag für den n8n-Workflow und die Firestore-Regeln beschreibt [n8n/README.md](n8n/README.md).
+Den API-Vertrag für den n8n-Workflow beschreibt [n8n/README.md](n8n/README.md).
+
+### Firestore einrichten
+
+- Regeln und Index liegen in `firestore.rules` und `firestore.indexes.json` und werden mit `npx firebase-tools deploy --only firestore` hochgeladen.
+- Die Beispielrezepte aus dem Mock spielt `npm run seed -- <pfad-zum-service-account.json>` ins Kochbuch ein.
+- Der Service-Account-Schlüssel gehört **nicht** ins Repo; `*-sa.json` und `*service-account*.json` sind in `.gitignore` gesperrt.
 
 ## Skripte
 
@@ -45,6 +51,7 @@ Den API-Vertrag für den n8n-Workflow und die Firestore-Regeln beschreibt [n8n/R
 | `npm run build` | Produktions-Build nach `dist/`                 |
 | `npm test`      | Unit-Tests (Vitest)                            |
 | `npm run docs`  | Generiert die TSDoc-Dokumentation nach `docs/` |
+| `npm run seed`  | Spielt die Beispielrezepte in Firestore ein    |
 
 ## Projektstruktur
 
@@ -67,6 +74,8 @@ src/app/
 └── shared/components/ # Menüleiste, Loader, Pop-up, Pagination, ...
 public/assets/         # Aus Figma exportierte Bilder und Icons (WebP/SVG)
 n8n/                   # Workflows und API-Vertrag
+scripts/               # Seed-Skript für Firestore
+firestore.rules        # Security Rules
 ```
 
 ## Commit-Konvention
