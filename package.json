@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "docs": "typedoc",
-    "seed": "node --no-warnings scripts/seed-firestore.mjs"
+    "seed": "node --no-warnings scripts/seed-database.mjs"
   },
   "private": true,
   "packageManager": "npm@11.12.1",
