@@ -19,13 +19,25 @@
   padding: 16px;
 }
 
-.spinner {
+.card {
+  position: relative;
   width: 253px;
-  height: auto;
+  aspect-ratio: 253 / 309;
+  overflow: hidden;
+  border-radius: $radius-lg;
+  background: $green-pale;
 
   @include mobile {
     width: 180px;
   }
+}
+
+.spinner {
+  position: absolute;
+  bottom: 4.5%;
+  left: 0;
+  width: 100%;
+  height: auto;
 }
 
 .text {
