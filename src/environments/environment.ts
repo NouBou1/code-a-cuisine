@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  useMock: { generator: true, cookbook: false },
+  useMock: { generator: false, cookbook: false },
   firebase: {
     apiKey: 'AIzaSyDeZi_bLquqtuvXLwkupXj47cGkNAAJnUQ',
     authDomain: 'code-a-cuisine-28274.firebaseapp.com',
@@ -11,6 +11,6 @@ export const environment = {
     appId: '1:322911783885:web:af1099904e2f547a659284',
   },
   n8n: {
-    baseUrl: 'https://YOUR_N8N_SERVER/webhook',
+    baseUrl: 'https://n8n.bit-bunker.cloud/webhook',
   },
 };
