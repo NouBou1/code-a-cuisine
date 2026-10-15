@@ -31,7 +31,7 @@ Die App läuft danach auf http://localhost:4200 – standardmäßig mit **Mock-D
 
 In `src/environments/environment.ts` (Produktion) und `environment.development.ts` (Entwicklung):
 
-1. `useMock` auf `false` setzen
+1. `useMock.generator` (n8n) und `useMock.cookbook` (Realtime Database) auf `false` setzen – beide lassen sich einzeln umschalten
 2. `firebase` – Web-App-Config aus der Firebase-Konsole (Projekteinstellungen → Meine Apps), inklusive `databaseURL`
 3. `n8n.baseUrl` – z. B. `https://n8n.example.com/webhook` (Entwicklung: `/webhook-test`)
 

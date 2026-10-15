@@ -6,7 +6,7 @@ Credentials werden von n8n nicht mit exportiert – trotzdem vor dem Commit prü
 
 ## API-Vertrag: Rezepte generieren
 
-Das Frontend nutzt diesen Vertrag bereits (`N8nRecipeGenerator`). Solange `useMock: true` in den Environments gesetzt ist, simuliert `MockRecipeGenerator` ihn lokal.
+Das Frontend nutzt diesen Vertrag bereits (`N8nRecipeGenerator`). Solange `useMock.generator` in den Environments `true` ist, simuliert `MockRecipeGenerator` ihn lokal.
 
 **Ablauf im Workflow:** Webhook → Validierung → Gemini → Realtime Database (`recipes`) → Response
 
