@@ -10,6 +10,20 @@ Das Frontend nutzt diesen Vertrag bereits (`N8nRecipeGenerator`). Solange `useMo
 
 **Ablauf im Workflow:** Webhook → Validierung → Gemini → Realtime Database (`recipes`) → Response
 
+## Workflow `generate-recipes.workflow.json`
+
+```
+Webhook → Validate input → Input valid? ─ja→ Build prompt → Gemini ──→ Check recipes → Save to Firebase → Build response → Respond recipes
+                                        └nein→ Respond invalid input        └Fehler→ Gemini fallback ─┘
+                         Fehler bei Fallback, Prüfung oder Speichern → Respond generator error (502)
+```
+
+- **Gemini:** `gemini-3.5-flash` mit festem Antwort-Schema, 2 Versuche à 20 s; bei Fehlern (z. B. 503 „high demand“) übernimmt `gemini-3.5-flash-lite`. Die Modelle stehen oben im Knoten *Build prompt*.
+- **Check recipes** prüft die KI-Antwort und übernimmt Küche, Diät, Portionen usw. aus der Anfrage.
+- Nach dem Import zwei Credentials zuweisen:
+  - **Header Auth** `Gemini API key` – Name `x-goog-api-key`, Value = API-Key (für *Gemini* und *Gemini fallback*)
+  - **Google Service Account** `Firebase service account` – `client_email` und `private_key` aus dem Service-Account-JSON, *Set up for use in HTTP Request node* aktiv, Scopes `https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email`
+
 ### Request
 
 `POST {n8n.baseUrl}/recipes/generate`
