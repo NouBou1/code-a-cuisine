@@ -1,5 +1,5 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { FirestoreCookbookService } from './firestore-cookbook.service';
+import { DatabaseCookbookService } from './database-cookbook.service';
 import { MockRecipeGenerator } from './mock/mock-recipe-generator';
 import { MockCookbookService } from './mock/mock-cookbook.service';
 import { N8nRecipeGenerator } from './n8n-recipe-generator';
@@ -8,7 +8,7 @@ import { CookbookService } from './cookbook.service';
 
 /**
  * Registers generator and cookbook, either real or mocked.
- * @param useMock - `true` to use mocks instead of n8n and Firestore.
+ * @param useMock - `true` to use mocks instead of n8n and the Realtime Database.
  * @returns Providers for `app.config.ts`.
  */
 export function provideRecipeData(useMock: boolean): EnvironmentProviders {
@@ -20,7 +20,7 @@ export function provideRecipeData(useMock: boolean): EnvironmentProviders {
         ]
       : [
           { provide: RecipeGenerator, useClass: N8nRecipeGenerator },
-          { provide: CookbookService, useClass: FirestoreCookbookService },
+          { provide: CookbookService, useClass: DatabaseCookbookService },
         ],
   );
 }

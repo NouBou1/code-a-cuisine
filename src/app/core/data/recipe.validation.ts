@@ -2,7 +2,7 @@ import { Recipe, RecipeIngredient, RecipeStep } from '../models/recipe.model';
 
 /**
  * Checks at runtime whether a value is a valid recipe.
- * @param value - Value from n8n or Firestore.
+ * @param value - Value from n8n or the Realtime Database.
  * @returns `true` if it has the shape of a `Recipe`.
  */
 export function isRecipe(value: unknown): value is Recipe {
