@@ -6,21 +6,23 @@ import { N8nRecipeGenerator } from './n8n-recipe-generator';
 import { RecipeGenerator } from './recipe-generator';
 import { CookbookService } from './cookbook.service';
 
+export interface MockSettings {
+  generator: boolean;
+  cookbook: boolean;
+}
+
 /**
- * Registers generator and cookbook, either real or mocked.
- * @param useMock - `true` to use mocks instead of n8n and the Realtime Database.
+ * Registers generator and cookbook, each either real or mocked.
+ * @param useMock - `generator` mocks n8n, `cookbook` mocks the Realtime Database.
  * @returns Providers for `app.config.ts`.
  */
-export function provideRecipeData(useMock: boolean): EnvironmentProviders {
-  return makeEnvironmentProviders(
-    useMock
-      ? [
-          { provide: RecipeGenerator, useClass: MockRecipeGenerator },
-          { provide: CookbookService, useExisting: MockCookbookService },
-        ]
-      : [
-          { provide: RecipeGenerator, useClass: N8nRecipeGenerator },
-          { provide: CookbookService, useClass: DatabaseCookbookService },
-        ],
-  );
+export function provideRecipeData(useMock: MockSettings): EnvironmentProviders {
+  return makeEnvironmentProviders([
+    useMock.generator
+      ? { provide: RecipeGenerator, useClass: MockRecipeGenerator }
+      : { provide: RecipeGenerator, useClass: N8nRecipeGenerator },
+    useMock.cookbook
+      ? { provide: CookbookService, useExisting: MockCookbookService }
+      : { provide: CookbookService, useClass: DatabaseCookbookService },
+  ]);
 }
