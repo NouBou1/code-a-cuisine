@@ -49,7 +49,7 @@
             aria-label="Suggested ingredients"
             [hidden]="!showSuggestions()"
           >
-            @for (suggestion of suggestions(); track suggestion; let i = $index) {
+            @for (suggestion of suggestions(); track $index; let i = $index) {
               <li
                 [id]="'ingredient-suggestion-' + i"
                 class="suggestion"
