@@ -5,13 +5,11 @@
   @include page-content;
   display: flex;
   flex-direction: column;
-  gap: 64px;
-  max-width: 1300px;
-  padding-top: 48px;
+  max-width: calc(1087px + 2 * $page-padding-x);
+  padding-top: $content-offset;
   padding-bottom: 80px;
 
   @include mobile {
-    gap: 32px;
     padding-top: 24px;
   }
 }
@@ -19,12 +17,13 @@
 .header {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
   text-align: center;
 
   h1 {
     font-size: 54px;
     font-weight: 600;
+    line-height: 1.2;
     color: $green-dark;
   }
 
@@ -51,6 +50,11 @@
   grid-template-columns: 577fr 478fr;
   align-items: start;
   gap: 32px;
+  margin-top: 64px;
+
+  @include mobile {
+    margin-top: 32px;
+  }
 
   @include tablet {
     grid-template-columns: 1fr;
@@ -69,11 +73,13 @@
 
 .input-panel {
   display: flex;
-  gap: 24px;
+  gap: 32px;
+  padding: 25px 33px;
 
   @include mobile {
     flex-direction: column;
     gap: 8px;
+    padding: 20px 16px;
   }
 }
 
@@ -195,7 +201,13 @@
 .list-panel {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
+  padding: 24px;
+
+  @include mobile {
+    gap: 16px;
+    padding: 20px 16px;
+  }
 
   h2 {
     font-size: 20px;
@@ -206,7 +218,7 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .empty {
@@ -218,8 +230,10 @@
 .actions {
   display: flex;
   justify-content: flex-end;
+  margin-top: 56px;
 
   @include mobile {
     justify-content: center;
+    margin-top: 32px;
   }
 }

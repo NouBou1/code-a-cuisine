@@ -4,7 +4,7 @@
 .counter {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-size: 20px;
 
   @include mobile {
