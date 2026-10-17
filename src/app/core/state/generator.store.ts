@@ -1,5 +1,6 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, throwError } from 'rxjs';
+import { hasEnoughIngredients, insufficientIngredientsError } from '../data/generation.validation';
 import { RecipeGenerator } from '../data/recipe-generator';
 import { isRecipe } from '../data/recipe.validation';
 import { Ingredient, IngredientUnit } from '../models/ingredient.model';
@@ -87,7 +88,7 @@ export class GeneratorStore {
   }
 
   /**
-   * Generates recipes and stores them as results.
+   * Generates recipes and stores them as results; too few ingredients fail without a request.
    * @returns The generated recipes, or an `ApiError`.
    */
   generate(): Observable<Recipe[]> {
@@ -96,9 +97,9 @@ export class GeneratorStore {
       amount,
       unit,
     }));
-    return this.generator
-      .generate({ ingredients, preferences: this.preferences() })
-      .pipe(tap((results) => this.patch({ results })));
+    const request = { ingredients, preferences: this.preferences() };
+    if (!hasEnoughIngredients(request)) return throwError(insufficientIngredientsError);
+    return this.generator.generate(request).pipe(tap((results) => this.patch({ results })));
   }
 
   /** Clears the generator for a new run. */

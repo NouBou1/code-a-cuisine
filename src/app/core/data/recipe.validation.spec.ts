@@ -1,6 +1,6 @@
 import { MOCK_RECIPES } from './mock/mock-recipes';
 import { isRecipe } from './recipe.validation';
-import { hasEnoughIngredients } from './mock/mock-recipe-generator';
+import { hasEnoughIngredients } from './generation.validation';
 import { DEFAULT_PREFERENCES } from '../models/preferences.model';
 
 describe('isRecipe', () => {
@@ -16,7 +16,7 @@ describe('isRecipe', () => {
   });
 });
 
-describe('hasEnoughIngredients (mock validation)', () => {
+describe('hasEnoughIngredients', () => {
   const preferences = { ...DEFAULT_PREFERENCES, portions: 2 };
 
   it('accepts enough amount for the portions', () => {

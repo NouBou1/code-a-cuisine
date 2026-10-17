@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { RecipeGenerator } from '../data/recipe-generator';
+import { INSUFFICIENT_INGREDIENTS } from '../models/api-error.model';
 import { MOCK_RECIPES } from '../data/mock/mock-recipes';
 import { GeneratorStore, MAX_INGREDIENTS, normalizeIngredient } from './generator.store';
 
@@ -58,14 +59,26 @@ describe('GeneratorStore', () => {
   });
 
   it('sends ingredients and preferences and stores the results', () => {
-    store.addIngredient({ name: 'Pasta', amount: 100, unit: 'gram' });
+    store.addIngredient({ name: 'Pasta', amount: 400, unit: 'gram' });
     store.updatePreferences({ portions: 4 });
     store.generate().subscribe();
     expect(generator.generate).toHaveBeenCalledWith({
-      ingredients: [{ name: 'Pasta', amount: 100, unit: 'gram' }],
+      ingredients: [{ name: 'Pasta', amount: 400, unit: 'gram' }],
       preferences: expect.objectContaining({ portions: 4 }),
     });
     expect(store.results()).toHaveLength(3);
+  });
+
+  it('rejects too few ingredients without calling the generator', () => {
+    generator.generate.mockClear();
+    store.addIngredient({ name: 'Pasta', amount: 100, unit: 'gram' });
+    store.updatePreferences({ portions: 4 });
+    const error = vi.fn();
+    store.generate().subscribe({ error });
+    expect(generator.generate).not.toHaveBeenCalled();
+    expect(error).toHaveBeenCalledWith(
+      expect.objectContaining({ status: 422, code: INSUFFICIENT_INGREDIENTS }),
+    );
   });
 
   it('resets everything', () => {

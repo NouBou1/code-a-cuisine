@@ -1,16 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, delay, of, switchMap, throwError, timer } from 'rxjs';
-import { ApiError, INSUFFICIENT_INGREDIENTS } from '../../models/api-error.model';
 import { GenerateRecipesRequest, RECIPES_PER_GENERATION } from '../../models/generation.model';
 import { Ingredient, formatAmount } from '../../models/ingredient.model';
 import { CookingTime } from '../../models/preferences.model';
 import { Recipe, RecipeStep } from '../../models/recipe.model';
+import { hasEnoughIngredients, insufficientIngredientsError } from '../generation.validation';
 import { RecipeGenerator } from '../recipe-generator';
 import { MockCookbookService } from './mock-cookbook.service';
 
 const LATENCY_MS = 2500;
-const MIN_AMOUNT_PER_PORTION = 100;
-const GRAMS_PER_PIECE = 100;
 const DURATION: Record<CookingTime, number> = { quick: 20, medium: 35, complex: 55 };
 
 const TITLE_PATTERNS = [
@@ -27,34 +25,12 @@ export class MockRecipeGenerator extends RecipeGenerator {
   /** @inheritdoc */
   generate(request: GenerateRecipesRequest): Observable<Recipe[]> {
     if (!hasEnoughIngredients(request)) {
-      const error: ApiError = {
-        status: 422,
-        code: INSUFFICIENT_INGREDIENTS,
-        message:
-          'It looks like some ingredient quantities aren’t sufficient for your selected servings. Please add or adjust quantities and try again.',
-      };
-      return timer(LATENCY_MS).pipe(switchMap(() => throwError(() => error)));
+      return timer(LATENCY_MS).pipe(switchMap(() => throwError(insufficientIngredientsError)));
     }
     const recipes = buildRecipes(request);
     this.cookbook.add(recipes);
     return of(recipes).pipe(delay(LATENCY_MS));
   }
-}
-
-/**
- * Checks whether the ingredient amounts suffice for the portions.
- * @param request - The generation request.
- * @returns `true` if there is enough.
- */
-export function hasEnoughIngredients({
-  ingredients,
-  preferences,
-}: GenerateRecipesRequest): boolean {
-  const total = ingredients.reduce(
-    (sum, i) => sum + (i.unit === 'piece' ? i.amount * GRAMS_PER_PIECE : i.amount),
-    0,
-  );
-  return ingredients.length > 0 && total >= preferences.portions * MIN_AMOUNT_PER_PORTION;
 }
 
 /**
