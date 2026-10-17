@@ -15,10 +15,16 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 24px;
+  gap: 32px;
   padding-top: 40px;
+  padding-inline: $menu-padding-x;
+
+  @include tablet {
+    padding-inline: $page-padding-x;
+  }
 
   @include mobile {
+    padding-inline: $page-padding-x-mobile;
     gap: 12px;
     padding-top: 16px;
   }
@@ -36,8 +42,14 @@
 .back {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   font-size: 14px;
+  line-height: 16px;
+
+  svg {
+    width: 20px;
+    height: auto;
+  }
 
   &:hover span {
     text-decoration: underline;
