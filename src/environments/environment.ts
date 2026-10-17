@@ -1,6 +1,5 @@
 export const environment = {
   production: true,
-  useMock: { generator: false, cookbook: false },
   firebase: {
     apiKey: 'AIzaSyDeZi_bLquqtuvXLwkupXj47cGkNAAJnUQ',
     authDomain: 'code-a-cuisine-28274.firebaseapp.com',

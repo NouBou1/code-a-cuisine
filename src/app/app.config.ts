@@ -17,6 +17,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideHttpClient(withFetch(), withInterceptors([httpErrorInterceptor])),
     provideFirebase(environment.firebase),
-    provideRecipeData(environment.useMock),
+    provideRecipeData(),
   ],
 };

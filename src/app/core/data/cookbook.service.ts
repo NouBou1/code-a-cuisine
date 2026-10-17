@@ -1,7 +1,7 @@
 import { Cuisine } from '../models/preferences.model';
 import { Recipe } from '../models/recipe.model';
 
-/** Access to the stored recipes; implemented for the Realtime Database and as mock. */
+/** Access to the stored recipes in the Realtime Database. */
 export abstract class CookbookService {
   /**
    * Loads a recipe.

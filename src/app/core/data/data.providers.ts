@@ -1,28 +1,16 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
+import { CookbookService } from './cookbook.service';
 import { DatabaseCookbookService } from './database-cookbook.service';
-import { MockRecipeGenerator } from './mock/mock-recipe-generator';
-import { MockCookbookService } from './mock/mock-cookbook.service';
 import { N8nRecipeGenerator } from './n8n-recipe-generator';
 import { RecipeGenerator } from './recipe-generator';
-import { CookbookService } from './cookbook.service';
-
-export interface MockSettings {
-  generator: boolean;
-  cookbook: boolean;
-}
 
 /**
- * Registers generator and cookbook, each either real or mocked.
- * @param useMock - `generator` mocks n8n, `cookbook` mocks the Realtime Database.
+ * Registers the n8n generator and the Realtime Database cookbook.
  * @returns Providers for `app.config.ts`.
  */
-export function provideRecipeData(useMock: MockSettings): EnvironmentProviders {
+export function provideRecipeData(): EnvironmentProviders {
   return makeEnvironmentProviders([
-    useMock.generator
-      ? { provide: RecipeGenerator, useClass: MockRecipeGenerator }
-      : { provide: RecipeGenerator, useClass: N8nRecipeGenerator },
-    useMock.cookbook
-      ? { provide: CookbookService, useExisting: MockCookbookService }
-      : { provide: CookbookService, useClass: DatabaseCookbookService },
+    { provide: RecipeGenerator, useClass: N8nRecipeGenerator },
+    { provide: CookbookService, useClass: DatabaseCookbookService },
   ]);
 }

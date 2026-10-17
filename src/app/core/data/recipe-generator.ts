@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { GenerateRecipesRequest } from '../models/generation.model';
 import { Recipe } from '../models/recipe.model';
 
-/** Generates recipes; implemented for n8n and as mock. */
+/** Generates recipes via n8n. */
 export abstract class RecipeGenerator {
   /**
    * Generates new recipes.
