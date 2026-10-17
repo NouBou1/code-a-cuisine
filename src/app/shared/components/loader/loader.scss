@@ -15,8 +15,12 @@
   flex: 1;
   @include flex-center;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
   padding: 16px;
+
+  @include mobile {
+    gap: 24px;
+  }
 }
 
 .card {
@@ -44,6 +48,7 @@
   font-family: $font-display;
   font-size: 48px;
   font-weight: 700;
+  line-height: 1.15;
 
   @include mobile {
     font-size: 32px;

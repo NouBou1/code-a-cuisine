@@ -19,12 +19,19 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 64px;
-  padding-top: 120px;
+  padding-top: 152px;
   padding-bottom: 120px;
+  padding-inline: 65px;
+
+  @include tablet {
+    padding-top: 120px;
+    padding-inline: $page-padding-x;
+  }
 
   @include mobile {
     padding-top: 40px;
     padding-bottom: 40px;
+    padding-inline: $page-padding-x-mobile;
   }
 }
 
@@ -38,7 +45,6 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
 }
 
 .subtitle {
@@ -79,12 +85,13 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 16px 32px;
+  gap: 16px;
 
   h2 {
     font-family: $font-display;
     font-size: 32px;
     font-weight: 500;
+    line-height: 1;
 
     @include mobile {
       max-width: 60%;
@@ -92,8 +99,12 @@
     }
   }
 
-  .btn-secondary {
-    margin-left: -20px;
+  @include mobile {
+    gap: 16px 32px;
+
+    .btn-secondary {
+      margin-left: -20px;
+    }
   }
 }
 
