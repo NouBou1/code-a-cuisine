@@ -106,6 +106,59 @@
   flex: 1;
 }
 
+.combobox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name-input {
+  position: relative;
+
+  .pill-input {
+    width: 100%;
+  }
+}
+
+// Inline completion
+.completion {
+  position: absolute;
+  inset: 0;
+  padding: 0 17px;
+  overflow: hidden;
+  font-size: 18px;
+  line-height: 36px;
+  white-space: pre;
+  color: rgba($green-darkest, 0.4);
+  pointer-events: none;
+
+  .typed {
+    color: transparent;
+  }
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+.suggestions {
+  padding-left: 16px;
+}
+
+.suggestion {
+  padding: 4px 8px;
+  border-radius: $radius-sm;
+  font-size: 16px;
+  line-height: 20px;
+  color: $green-darkest;
+  cursor: pointer;
+
+  &:hover,
+  &.active {
+    background: rgba($creme, 0.6);
+  }
+}
+
 .amount-row {
   display: flex;
   align-items: center;
