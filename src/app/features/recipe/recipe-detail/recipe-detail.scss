@@ -5,9 +5,9 @@
   @include page-content;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 56px;
   max-width: 1356px;
-  padding-top: 48px;
+  padding-top: $content-offset;
   padding-bottom: 64px;
 
   @include mobile {
@@ -31,7 +31,7 @@
   flex-direction: column;
   gap: 48px;
   padding: 40px 48px;
-  border: 1px solid $creme;
+  border: 4px solid $creme;
   border-radius: $radius-lg;
   background: rgba($creme, 0.3);
 
@@ -44,6 +44,7 @@
 // Summary
 .summary {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 32px;
   padding: 24px;
@@ -52,6 +53,7 @@
 
   @include tablet {
     flex-direction: column;
+    align-items: stretch;
   }
 
   @include mobile {
@@ -62,8 +64,12 @@
 .name {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   max-width: 640px;
+
+  @include mobile {
+    gap: 16px;
+  }
 
   h1 {
     font-size: 54px;
@@ -161,7 +167,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
+  gap: 24px;
+
+  &:first-of-type {
+    gap: 0;
+  }
 
   h2 {
     font-size: 32px;
@@ -173,7 +183,10 @@
   }
 
   @include mobile {
-    gap: 16px;
+    &,
+    &:first-of-type {
+      gap: 16px;
+    }
   }
 }
 
@@ -184,7 +197,7 @@
   gap: 32px 80px;
 
   h3 {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
     font-size: 24px;
     font-weight: 600;
     color: $green-text;
@@ -204,8 +217,7 @@
 .ingredient-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  font-size: 20px;
+  font-size: 24px;
 
   li {
     display: flex;
@@ -221,6 +233,7 @@
   }
 
   @include mobile {
+    gap: 4px;
     font-size: 16px;
   }
 }
@@ -240,11 +253,19 @@
 .step {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 32px;
 
   p {
-    font-size: 16px;
-    line-height: 1.4;
+    font-size: 18px;
+  }
+
+  @include mobile {
+    gap: 16px;
+
+    p {
+      font-size: 16px;
+      line-height: 1.4;
+    }
   }
 }
 
@@ -271,7 +292,7 @@
   height: 32px;
   border-radius: 50%;
   background: $creme;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 // Mobile toggle
@@ -305,19 +326,26 @@
   align-items: center;
   justify-content: center;
   gap: 16px 24px;
+  font-family: $font-numbers;
   font-size: 16px;
+  font-weight: 400;
 
   strong {
+    margin-right: 8px;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   @include mobile {
     justify-content: space-between;
     flex-wrap: nowrap;
+    font-family: $font-primary;
+    font-weight: 500;
 
     strong {
       display: block;
+      margin-right: 0;
+      font-weight: 600;
     }
   }
 }
@@ -352,12 +380,14 @@
   border-radius: $radius-lg;
   background: rgba($green, 0.1);
   font-size: 24px;
+  font-weight: 600;
   text-align: center;
 
   @include mobile {
     justify-content: space-between;
     padding: 16px;
     font-size: 16px;
+    font-weight: 500;
     text-align: left;
   }
 }
@@ -365,6 +395,11 @@
 .actions {
   display: flex;
   justify-content: flex-end;
+  margin-top: 8px;
+
+  @include mobile {
+    margin-top: 0;
+  }
 }
 
 @keyframes pop {
