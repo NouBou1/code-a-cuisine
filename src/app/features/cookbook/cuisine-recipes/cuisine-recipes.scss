@@ -13,6 +13,7 @@
   h1 {
     font-size: 40px;
     font-weight: 700;
+    line-height: 1.05;
     color: $green-darkest;
 
     @include mobile {
@@ -29,11 +30,6 @@
 .actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: -40px;
-
-  @include tablet {
-    margin-top: 0;
-  }
 }
 
 .status {
@@ -52,14 +48,27 @@
   gap: 8px;
   width: 100%;
   max-width: 900px;
+  margin-top: 24px;
   margin-inline: auto;
+
+  @include mobile {
+    margin-top: 0;
+  }
+}
+
+app-pagination {
+  margin-top: 56px;
+
+  @include mobile {
+    margin-top: 0;
+  }
 }
 
 .row {
   display: flex;
   align-items: center;
-  gap: 12px 16px;
-  padding: 6px 12px;
+  gap: 12px 8px;
+  padding: 6px 10px;
   border-radius: $radius-md;
   transition: background-color 150ms ease;
 
@@ -69,6 +78,7 @@
 
   @include mobile {
     flex-wrap: wrap;
+    gap: 12px 16px;
     padding: 12px;
     background: rgba($creme, 0.5);
   }
@@ -81,7 +91,7 @@
   height: 30px;
   border-radius: 50%;
   background: $creme-dark;
-  font-size: 16px;
+  font-size: 18px;
   color: $green-dark;
   align-self: flex-end;
 
@@ -94,7 +104,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
   min-width: 0;
 }
 
@@ -103,6 +112,7 @@
   align-items: center;
   gap: 6px;
   font-size: 16px;
+  line-height: 24px;
   color: $green;
 }
 
@@ -119,7 +129,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 4px;
+  gap: 8px;
 
   @include mobile {
     width: 100%;
