@@ -25,22 +25,21 @@ npm install
 npm start
 ```
 
-Die App läuft danach auf http://localhost:4200 – standardmäßig mit **Mock-Daten**, also ohne Backend.
+Die App läuft danach auf http://localhost:4200 und spricht direkt mit n8n und der Firebase Realtime Database.
 
 ### Backend anbinden
 
 In `src/environments/environment.ts` (Produktion) und `environment.development.ts` (Entwicklung):
 
-1. `useMock.generator` (n8n) und `useMock.cookbook` (Realtime Database) auf `false` setzen – beide lassen sich einzeln umschalten
-2. `firebase` – Web-App-Config aus der Firebase-Konsole (Projekteinstellungen → Meine Apps), inklusive `databaseURL`
-3. `n8n.baseUrl` – z. B. `https://n8n.example.com/webhook` (Entwicklung: `/webhook-test`)
+1. `firebase` – Web-App-Config aus der Firebase-Konsole (Projekteinstellungen → Meine Apps), inklusive `databaseURL`
+2. `n8n.baseUrl` – z. B. `https://n8n.example.com/webhook` (Entwicklung: `/webhook-test`)
 
-Den API-Vertrag für den n8n-Workflow beschreibt [n8n/README.md](n8n/README.md).
+Den n8n-Workflow zum Importieren enthält der Ordner [n8n/](n8n/).
 
 ### Realtime Database einrichten
 
 - Regeln und Indizes liegen in `database.rules.json` und werden mit `npx firebase-tools deploy --only database` hochgeladen.
-- Die Beispielrezepte aus dem Mock spielt `npm run seed -- <pfad-zum-service-account.json>` ins Kochbuch ein. Liegt die Datenbank nicht in `europe-west1`, die `databaseURL` als zweites Argument anhängen.
+- Die Beispielrezepte aus `src/app/core/data/seed-recipes.ts` spielt `npm run seed -- <pfad-zum-service-account.json>` ins Kochbuch ein. Liegt die Datenbank nicht in `europe-west1`, die `databaseURL` als zweites Argument anhängen.
 - Der Service-Account-Schlüssel gehört **nicht** ins Repo; `*-sa.json` und `*service-account*.json` sind in `.gitignore` gesperrt.
 
 ## Skripte
@@ -59,7 +58,7 @@ Den API-Vertrag für den n8n-Workflow beschreibt [n8n/README.md](n8n/README.md).
 src/app/
 ├── core/
 │   ├── constants/     # Auswahloptionen (Küchen, Kochzeiten, Ernährung)
-│   ├── data/          # RecipeGenerator & CookbookService (n8n/Realtime Database + Mock)
+│   ├── data/          # RecipeGenerator & CookbookService (n8n/Realtime Database), Seed-Rezepte
 │   ├── firebase/      # Firebase-/Database-Provider
 │   ├── guards/        # Schutz der Generator-Schritte
 │   ├── interceptors/  # Zentrale HTTP-Fehlerbehandlung
@@ -73,7 +72,7 @@ src/app/
 │   └── cookbook/      # Kochbuch und Küchen-Listen
 └── shared/components/ # Menüleiste, Loader, Pop-up, Pagination, ...
 public/assets/         # Aus Figma exportierte Bilder und Icons (WebP/SVG)
-n8n/                   # Workflows und API-Vertrag
+n8n/                   # Workflow-Export für n8n
 scripts/               # Seed-Skript für die Realtime Database
 database.rules.json    # Security Rules und Indizes
 ```
