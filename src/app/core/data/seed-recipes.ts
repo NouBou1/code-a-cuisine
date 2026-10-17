@@ -1,12 +1,12 @@
-import type { Recipe } from '../../models/recipe.model';
+import type { Recipe } from '../models/recipe.model';
 
 const DAY = 86_400_000;
 const BASE = Date.UTC(2026, 9, 1);
 
-/** Seed recipes for the mock cookbook. */
-export const MOCK_RECIPES: Recipe[] = [
+/** Example recipes the seed script writes to the cookbook. */
+export const SEED_RECIPES: Recipe[] = [
   {
-    id: 'mock-pasta-spinach',
+    id: 'pasta-spinach',
     title: 'Pasta with spinach and cherry tomatoes',
     cuisine: 'italian',
     cookingTime: 'quick',
@@ -56,7 +56,7 @@ export const MOCK_RECIPES: Recipe[] = [
     createdAt: BASE - 2 * DAY,
   },
   {
-    id: 'mock-garlic-shrimp',
+    id: 'garlic-shrimp',
     title: 'Creamy garlic shrimp pasta',
     cuisine: 'italian',
     cookingTime: 'medium',
@@ -97,7 +97,7 @@ export const MOCK_RECIPES: Recipe[] = [
     createdAt: BASE - 4 * DAY,
   },
   {
-    id: 'mock-funghi-pizza',
+    id: 'funghi-pizza',
     title: 'Funghi salami pizza',
     cuisine: 'italian',
     cookingTime: 'complex',
@@ -138,7 +138,7 @@ export const MOCK_RECIPES: Recipe[] = [
     createdAt: BASE - 6 * DAY,
   },
   {
-    id: 'mock-schnitzel',
+    id: 'schnitzel',
     title: 'Schnitzel with fries',
     cuisine: 'german',
     cookingTime: 'medium',
@@ -178,7 +178,7 @@ export const MOCK_RECIPES: Recipe[] = [
     createdAt: BASE - 1 * DAY,
   },
   {
-    id: 'mock-kaesespaetzle',
+    id: 'kaesespaetzle',
     title: 'Käsespätzle with crispy onions',
     cuisine: 'german',
     cookingTime: 'medium',
@@ -211,7 +211,7 @@ export const MOCK_RECIPES: Recipe[] = [
     createdAt: BASE - 3 * DAY,
   },
   {
-    id: 'mock-teriyaki-salmon',
+    id: 'teriyaki-salmon',
     title: 'Teriyaki salmon bowl',
     cuisine: 'japanese',
     cookingTime: 'quick',
@@ -246,7 +246,7 @@ export const MOCK_RECIPES: Recipe[] = [
     createdAt: BASE - 5 * DAY,
   },
   {
-    id: 'mock-paleo-bars',
+    id: 'paleo-bars',
     title: 'Low Carb Vegan No-Bake Paleo Bars',
     cuisine: 'gourmet',
     cookingTime: 'medium',
@@ -276,7 +276,7 @@ export const MOCK_RECIPES: Recipe[] = [
     createdAt: BASE - 7 * DAY,
   },
   {
-    id: 'mock-chana-masala',
+    id: 'chana-masala',
     title: 'Chana masala',
     cuisine: 'indian',
     cookingTime: 'medium',
@@ -310,7 +310,7 @@ export const MOCK_RECIPES: Recipe[] = [
     createdAt: BASE - 8 * DAY,
   },
   {
-    id: 'mock-sushi-tacos',
+    id: 'sushi-tacos',
     title: 'Sushi tacos with spicy mayo',
     cuisine: 'fusion',
     cookingTime: 'medium',

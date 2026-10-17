@@ -1,18 +1,18 @@
-import { MOCK_RECIPES } from './mock/mock-recipes';
+import { SEED_RECIPES } from './seed-recipes';
 import { isRecipe } from './recipe.validation';
 import { hasEnoughIngredients } from './generation.validation';
 import { DEFAULT_PREFERENCES } from '../models/preferences.model';
 
 describe('isRecipe', () => {
   it('accepts all seed recipes', () => {
-    expect(MOCK_RECIPES.every(isRecipe)).toBe(true);
+    expect(SEED_RECIPES.every(isRecipe)).toBe(true);
   });
 
   it('rejects incomplete objects', () => {
-    const { steps: _steps, ...withoutSteps } = MOCK_RECIPES[0];
+    const { steps: _steps, ...withoutSteps } = SEED_RECIPES[0];
     expect(isRecipe(withoutSteps)).toBe(false);
     expect(isRecipe(null)).toBe(false);
-    expect(isRecipe({ ...MOCK_RECIPES[0], likes: '5' })).toBe(false);
+    expect(isRecipe({ ...SEED_RECIPES[0], likes: '5' })).toBe(false);
   });
 });
 

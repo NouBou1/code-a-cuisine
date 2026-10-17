@@ -2,12 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { RecipeGenerator } from '../data/recipe-generator';
 import { INSUFFICIENT_INGREDIENTS } from '../models/api-error.model';
-import { MOCK_RECIPES } from '../data/mock/mock-recipes';
+import { SEED_RECIPES } from '../data/seed-recipes';
 import { GeneratorStore, MAX_INGREDIENTS, normalizeIngredient } from './generator.store';
 
 describe('GeneratorStore', () => {
   let store: GeneratorStore;
-  const generator = { generate: vi.fn(() => of(MOCK_RECIPES.slice(0, 3))) };
+  const generator = { generate: vi.fn(() => of(SEED_RECIPES.slice(0, 3))) };
 
   beforeEach(() => {
     sessionStorage.clear();
