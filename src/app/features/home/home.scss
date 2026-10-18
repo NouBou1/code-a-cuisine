@@ -29,7 +29,7 @@
   }
 
   @include mobile {
-    padding-top: 40px;
+    padding-top: 52px;
     padding-bottom: 40px;
     padding-inline: $page-padding-x-mobile;
   }
@@ -58,8 +58,9 @@
   }
 
   @include mobile {
-    max-width: 60%;
-    font-size: 22px;
+    max-width: 203px;
+    margin-bottom: 8px;
+    font-size: 24px;
   }
 }
 
@@ -75,9 +76,10 @@
   }
 
   @include mobile {
-    max-width: 60%;
-    margin-bottom: 32px;
-    font-size: 44px;
+    max-width: 240px;
+    margin-bottom: 40px;
+    font-size: 64px;
+    line-height: 1.125;
   }
 }
 
@@ -94,17 +96,16 @@
     line-height: 1;
 
     @include mobile {
-      max-width: 60%;
-      font-size: 22px;
+      max-width: 170px;
+      margin-left: 17px;
+      font-size: 24px;
+      line-height: 1.2;
     }
   }
 
   @include mobile {
-    gap: 16px 32px;
-
-    .btn-secondary {
-      margin-left: -20px;
-    }
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -140,11 +141,11 @@
 
   @include mobile {
     top: -6vw;
-    width: 55vw;
-    right: -18vw;
+    width: 105vw;
+    right: -69vw;
 
     img {
-      margin-top: -14vw;
+      margin-top: -43vw;
     }
   }
 }
