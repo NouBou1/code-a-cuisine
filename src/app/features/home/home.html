@@ -24,12 +24,12 @@
     </section>
 
     <div class="plates" aria-hidden="true">
-      @for (plate of plates; track plate; let i = $index) {
+      @for (plate of plates; track plate.src; let i = $index) {
         <img
-          [src]="plate"
+          [src]="plate.src"
           alt=""
-          width="480"
-          height="480"
+          [width]="plate.width"
+          [height]="plate.height"
           [attr.fetchpriority]="i < 3 ? 'high' : null"
           [attr.loading]="i < 3 ? null : 'lazy'"
         />
