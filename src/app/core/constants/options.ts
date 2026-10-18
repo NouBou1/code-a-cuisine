@@ -22,6 +22,7 @@ export interface CuisineInfo extends Option<Cuisine> {
   emoji: string;
   image: string;
   hero: string;
+  heroMobile: string;
 }
 
 export const CUISINES: readonly CuisineInfo[] = [
@@ -56,6 +57,7 @@ function cuisine(value: Cuisine, label: string, emoji: string): CuisineInfo {
     emoji,
     image: `assets/cuisines/${value}.webp`,
     hero: `assets/heroes/cuisine-${value}.webp`,
+    heroMobile: `assets/heroes/cuisine-${value}-mobile.webp`,
   };
 }
 

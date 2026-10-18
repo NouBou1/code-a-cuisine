@@ -10,8 +10,14 @@
 }
 
 img {
+  display: block;
   width: 100%;
   height: auto;
+
+  @include mobile {
+    height: 91px;
+    object-fit: contain;
+  }
 }
 
 .title {

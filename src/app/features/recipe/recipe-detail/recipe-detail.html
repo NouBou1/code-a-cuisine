@@ -63,7 +63,10 @@
       </header>
 
       <section class="section" aria-labelledby="ingredients-title">
-        <app-section-banner image="assets/heroes/recipe-ingredients.webp">
+        <app-section-banner
+          image="assets/heroes/recipe-ingredients.webp"
+          mobileImage="assets/heroes/recipe-ingredients-mobile.webp"
+        >
           <h2 id="ingredients-title">Ingredients</h2>
         </app-section-banner>
         <div id="ingredients-content" class="collapsible" [class.closed]="!ingredientsOpen()">
@@ -107,7 +110,10 @@
       </section>
 
       <section class="section" aria-labelledby="directions-title">
-        <app-section-banner image="assets/heroes/recipe-directions.webp">
+        <app-section-banner
+          image="assets/heroes/recipe-directions.webp"
+          mobileImage="assets/heroes/recipe-directions-mobile.webp"
+        >
           <h2 id="directions-title">Directions</h2>
         </app-section-banner>
         <div id="directions-content" class="collapsible" [class.closed]="!directionsOpen()">
