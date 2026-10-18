@@ -8,6 +8,7 @@ import {
 } from '../../../core/constants/options';
 import { CookbookService } from '../../../core/data/cookbook.service';
 import { Recipe } from '../../../core/models/recipe.model';
+import { MOBILE_MEDIA, mediaQuery } from '../../../core/services/media-query';
 import { GeneratorStore } from '../../../core/state/generator.store';
 import { LikesTag } from '../../../shared/components/likes-tag/likes-tag';
 import { MenuBar } from '../../../shared/components/menu-bar/menu-bar';
@@ -15,6 +16,7 @@ import { Pagination } from '../../../shared/components/pagination/pagination';
 import { SectionBanner } from '../../../shared/components/section-banner/section-banner';
 
 export const PAGE_SIZE = 15;
+export const PAGE_SIZE_MOBILE = 9;
 
 /** Paginated recipe list of one cuisine. */
 @Component({
@@ -31,6 +33,9 @@ export class CuisineRecipes {
   readonly cuisine = input.required<string>();
   readonly page = input(1, { transform: (v: unknown) => numberAttribute(v, 1) });
 
+  private readonly mobile = mediaQuery(MOBILE_MEDIA);
+  private readonly pageSize = computed(() => (this.mobile() ? PAGE_SIZE_MOBILE : PAGE_SIZE));
+
   protected readonly info = computed(() => findCuisine(this.cuisine()));
 
   protected readonly recipes = resource({
@@ -39,16 +44,16 @@ export class CuisineRecipes {
   });
 
   protected readonly totalPages = computed(() =>
-    Math.max(1, Math.ceil((this.recipes.value()?.length ?? 0) / PAGE_SIZE)),
+    Math.max(1, Math.ceil((this.recipes.value()?.length ?? 0) / this.pageSize())),
   );
   protected readonly currentPage = computed(() =>
     Math.min(Math.max(1, Math.floor(this.page())), this.totalPages()),
   );
   protected readonly pageRecipes = computed(() => {
-    const start = (this.currentPage() - 1) * PAGE_SIZE;
-    return (this.recipes.value() ?? []).slice(start, start + PAGE_SIZE);
+    const start = this.offset();
+    return (this.recipes.value() ?? []).slice(start, start + this.pageSize());
   });
-  protected readonly offset = computed(() => (this.currentPage() - 1) * PAGE_SIZE);
+  protected readonly offset = computed(() => (this.currentPage() - 1) * this.pageSize());
 
   /**
    * Returns the tags of a recipe.
