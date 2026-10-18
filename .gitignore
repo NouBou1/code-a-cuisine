@@ -53,3 +53,6 @@ Thumbs.db
 # Never commit credentials
 *service-account*.json
 *-sa.json
+
+# Local task list
+TODO.md
