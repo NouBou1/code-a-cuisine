@@ -110,7 +110,12 @@
   flex-direction: column;
   gap: 8px;
   height: 100%;
+  min-height: 124px;
   padding: 16px 88px 16px 12px;
+
+  @include mobile {
+    min-height: 106px;
+  }
   border-radius: $radius-md;
   background: rgba($green-light, 0.7);
   transition: background-color 150ms ease;
@@ -145,6 +150,14 @@
 
 .status {
   font-size: 18px;
+}
+
+.most-liked .status {
+  min-height: 132px;
+
+  @include mobile {
+    min-height: 114px;
+  }
 }
 
 .retry {

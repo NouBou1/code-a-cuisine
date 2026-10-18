@@ -35,6 +35,10 @@
   @include mobile {
     order: 1;
     justify-content: center;
+
+    .loading & {
+      display: none;
+    }
   }
 }
 

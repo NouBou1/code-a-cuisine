@@ -1,6 +1,6 @@
 <app-menu-bar backLink="/cookbook" backLabel="Cookbook" />
 
-<main class="page">
+<main class="page" [class.loading]="recipes.isLoading()">
   @if (info(); as cuisine) {
     <div class="actions">
       <button type="button" class="btn-primary" (click)="generate()">Generate a recipe</button>
