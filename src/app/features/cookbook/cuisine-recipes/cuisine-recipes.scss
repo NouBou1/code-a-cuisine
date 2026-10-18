@@ -17,19 +17,25 @@
     color: $green-darkest;
 
     @include mobile {
-      font-size: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.25;
     }
   }
 
   @include mobile {
-    gap: 24px;
-    padding-top: 16px;
+    padding-top: $content-offset-mobile;
   }
 }
 
 .actions {
   display: flex;
   justify-content: flex-end;
+
+  @include mobile {
+    order: 1;
+    justify-content: center;
+  }
 }
 
 .status {
@@ -52,7 +58,12 @@
   margin-inline: auto;
 
   @include mobile {
+    gap: 32px;
     margin-top: 0;
+
+    li:nth-child(even) .row {
+      background: rgba($creme, 0.7);
+    }
   }
 }
 
@@ -77,10 +88,10 @@ app-pagination {
   }
 
   @include mobile {
-    flex-wrap: wrap;
-    gap: 12px 16px;
-    padding: 12px;
-    background: rgba($creme, 0.5);
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    align-items: center;
+    gap: 4px 8px;
   }
 }
 
@@ -96,7 +107,7 @@ app-pagination {
   align-self: flex-end;
 
   @include mobile {
-    align-self: flex-start;
+    align-self: center;
   }
 }
 
@@ -105,6 +116,10 @@ app-pagination {
   display: flex;
   flex-direction: column;
   min-width: 0;
+
+  @include mobile {
+    display: contents;
+  }
 }
 
 .time {
@@ -121,7 +136,9 @@ app-pagination {
   color: $green-dark;
 
   @include mobile {
+    grid-column: 1 / -1;
     font-size: 18px;
+    font-weight: 600;
   }
 }
 
@@ -132,8 +149,8 @@ app-pagination {
   gap: 8px;
 
   @include mobile {
-    width: 100%;
+    grid-column: 1 / -1;
     justify-content: flex-start;
-    padding-left: 46px;
+    margin-top: 12px;
   }
 }
