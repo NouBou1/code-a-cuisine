@@ -197,10 +197,6 @@
 
 .field-error {
   min-height: 18px;
-
-  @include mobile {
-    min-height: 0;
-  }
 }
 
 .list-panel {
