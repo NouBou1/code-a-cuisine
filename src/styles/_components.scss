@@ -37,8 +37,9 @@
   }
 
   @include mobile {
-    font-size: 18px;
-    padding: 12px 20px;
+    padding: 16px;
+    font-size: 16px;
+    line-height: 20px;
   }
 }
 
@@ -76,7 +77,9 @@
   }
 
   @include mobile {
-    font-size: 16px;
+    padding: 14px 16px;
+    font-size: 18px;
+    line-height: 24px;
   }
 }
 
@@ -110,11 +113,6 @@
       width: 16px;
     }
   }
-
-  @include mobile {
-    font-size: 14px;
-    padding: 4px 10px;
-  }
 }
 
 // Tag choice
@@ -125,10 +123,6 @@
   align-items: center;
   gap: 12px;
   cursor: pointer;
-
-  @include mobile {
-    gap: 4px;
-  }
 
   input {
     position: absolute;
@@ -142,10 +136,6 @@
     font-size: 20px;
     line-height: 16px;
     transition: background-color 150ms ease;
-
-    @include mobile {
-      font-size: 16px;
-    }
   }
 
   &:hover .tag {

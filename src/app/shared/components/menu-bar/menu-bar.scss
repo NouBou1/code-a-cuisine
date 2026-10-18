@@ -25,8 +25,8 @@
 
   @include mobile {
     padding-inline: $page-padding-x-mobile;
-    gap: 12px;
-    padding-top: 16px;
+    gap: 16px;
+    padding-top: 12px;
   }
 }
 
@@ -35,7 +35,7 @@
   width: auto;
 
   @include mobile {
-    height: 40px;
+    height: 32px;
   }
 }
 

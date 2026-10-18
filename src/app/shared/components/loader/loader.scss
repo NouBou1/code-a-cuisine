@@ -17,10 +17,6 @@
   flex-direction: column;
   gap: 32px;
   padding: 16px;
-
-  @include mobile {
-    gap: 24px;
-  }
 }
 
 .card {
@@ -30,10 +26,6 @@
   overflow: hidden;
   border-radius: $radius-lg;
   background: $green-pale;
-
-  @include mobile {
-    width: 180px;
-  }
 }
 
 .spinner {
@@ -51,7 +43,7 @@
   line-height: 1.15;
 
   @include mobile {
-    font-size: 32px;
+    font-size: 36px;
   }
 }
 

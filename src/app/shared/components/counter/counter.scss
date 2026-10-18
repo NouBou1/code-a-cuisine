@@ -8,7 +8,7 @@
   font-size: 20px;
 
   @include mobile {
-    font-size: 16px;
+    font-size: 18px;
   }
 }
 
@@ -35,6 +35,7 @@
 
 .value {
   min-width: 22px;
+  font-size: 20px;
   padding: 0 5px;
   text-align: center;
   background: rgba($green, 0.2);

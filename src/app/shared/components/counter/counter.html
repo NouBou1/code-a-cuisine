@@ -6,7 +6,7 @@
     [disabled]="value() <= min()"
     [attr.aria-label]="'Fewer ' + plural()"
   >
-    <img src="assets/icons/minus.svg" alt="" width="20" height="20" />
+    <img src="assets/icons/minus.svg" alt="" width="28" height="28" />
   </button>
   <output class="value" aria-live="polite">{{ value() }}</output>
   <span>{{ unit() }}</span>
@@ -17,6 +17,6 @@
     [disabled]="value() >= max()"
     [attr.aria-label]="'More ' + plural()"
   >
-    <img src="assets/icons/plus.svg" alt="" width="20" height="20" />
+    <img src="assets/icons/plus.svg" alt="" width="28" height="28" />
   </button>
 </div>
