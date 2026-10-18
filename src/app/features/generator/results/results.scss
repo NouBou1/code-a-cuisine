@@ -23,7 +23,7 @@
 
   @include mobile {
     gap: 32px;
-    padding-top: 32px;
+    padding-top: $content-offset-mobile;
     padding-inline: $page-padding-x-mobile;
   }
 }
@@ -36,6 +36,10 @@
 
   @include tablet {
     grid-template-columns: 1fr;
+  }
+
+  @include mobile {
+    gap: 16px;
   }
 }
 
@@ -55,14 +59,20 @@
   }
 
   @include mobile {
-    gap: 16px;
+    display: contents;
 
     h1 {
       font-size: 32px;
+      line-height: 1.25;
     }
 
     p {
+      order: 1;
       font-size: 18px;
+    }
+
+    .tags {
+      order: 2;
     }
   }
 }
@@ -80,7 +90,7 @@
   border-radius: $radius-lg;
 
   @include mobile {
-    height: 160px;
+    height: 131px;
   }
 }
 
@@ -91,7 +101,8 @@
   margin-top: 24px;
 
   @include mobile {
-    margin-top: 0;
+    gap: 16px;
+    margin-top: 16px;
   }
 }
 
@@ -127,10 +138,8 @@
   }
 
   @include mobile {
-    gap: 24px;
-
     .btn-primary {
-      margin-top: 0;
+      margin-top: 16px;
     }
   }
 }
@@ -150,9 +159,18 @@
   gap: 6px;
   font-size: 20px;
   color: $green;
+
+  @include mobile {
+    font-size: 18px;
+  }
 }
 
 .actions {
   display: flex;
   justify-content: flex-end;
+
+  @include mobile {
+    justify-content: center;
+    margin-top: 8px;
+  }
 }
