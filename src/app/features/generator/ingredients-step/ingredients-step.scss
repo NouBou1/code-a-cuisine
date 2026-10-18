@@ -10,7 +10,7 @@
   padding-bottom: 80px;
 
   @include mobile {
-    padding-top: 24px;
+    padding-top: $content-offset-mobile;
   }
 }
 
@@ -32,15 +32,17 @@
   }
 
   @include mobile {
-    gap: 16px;
+    padding-inline: 8px;
     text-align: left;
 
     h1 {
       font-size: 32px;
+      line-height: 1.25;
     }
 
     p {
       font-size: 18px;
+      font-weight: 600;
     }
   }
 }
@@ -53,7 +55,8 @@
   margin-top: 64px;
 
   @include mobile {
-    margin-top: 32px;
+    gap: 24px;
+    margin-top: 40px;
   }
 
   @include tablet {
@@ -78,8 +81,8 @@
 
   @include mobile {
     flex-direction: column;
-    gap: 8px;
-    padding: 20px 16px;
+    gap: 16px;
+    padding: 25px 19px;
   }
 }
 
@@ -99,8 +102,6 @@
   }
 
   @include mobile {
-    gap: 12px;
-
     label,
     legend {
       font-size: 18px;
@@ -196,6 +197,10 @@
 
 .field-error {
   min-height: 18px;
+
+  @include mobile {
+    min-height: 0;
+  }
 }
 
 .list-panel {
@@ -205,13 +210,16 @@
   padding: 24px;
 
   @include mobile {
-    gap: 16px;
-    padding: 20px 16px;
+    padding: 24px 16px;
   }
 
   h2 {
     font-size: 20px;
     font-weight: 500;
+
+    @include mobile {
+      font-size: 18px;
+    }
   }
 }
 
@@ -219,6 +227,10 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+
+  @include mobile {
+    gap: 8px;
+  }
 }
 
 .empty {
@@ -234,6 +246,6 @@
 
   @include mobile {
     justify-content: center;
-    margin-top: 32px;
+    margin-top: 40px;
   }
 }
