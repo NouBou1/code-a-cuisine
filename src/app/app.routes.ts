@@ -47,5 +47,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/cookbook/cuisine-recipes/cuisine-recipes').then((m) => m.CuisineRecipes),
   },
+  {
+    path: 'imprint',
+    title: 'Imprint | Code à Cuisine',
+    loadComponent: () => import('./features/imprint/imprint').then((m) => m.Imprint),
+  },
   { path: '**', redirectTo: '' },
 ];

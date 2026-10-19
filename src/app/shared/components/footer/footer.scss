@@ -1,0 +1,21 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+.footer {
+  @include page-content;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding-block: 24px;
+  font-size: 14px;
+  color: rgba($green-darkest, 0.7);
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: $green-darkest;
+    }
+  }
+}

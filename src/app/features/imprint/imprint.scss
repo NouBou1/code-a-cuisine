@@ -1,0 +1,61 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+.page {
+  @include page-content;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: calc(800px + 2 * $page-padding-x);
+  padding-top: $content-offset;
+  padding-bottom: 80px;
+
+  @include mobile {
+    gap: 24px;
+    padding-top: $content-offset-mobile;
+  }
+}
+
+h1 {
+  font-size: 54px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: $green-dark;
+
+  @include mobile {
+    font-size: 32px;
+    line-height: 1.25;
+  }
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: $green-dark;
+
+  @include mobile {
+    font-size: 18px;
+  }
+}
+
+p,
+address {
+  font-size: 16px;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover {
+    color: $green-text;
+  }
+}
