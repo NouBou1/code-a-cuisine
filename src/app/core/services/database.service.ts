@@ -14,6 +14,7 @@ import {
 import { Observable } from 'rxjs';
 import { DATABASE } from '../firebase/firebase.providers';
 
+/** Database value together with its key. */
 export type WithId<T> = T & { id: string };
 
 /** Generic read and write helpers for the Realtime Database. */

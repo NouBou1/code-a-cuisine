@@ -1,9 +1,13 @@
+/** Cooking time category. */
 export type CookingTime = 'quick' | 'medium' | 'complex';
 
+/** Available cuisine. */
 export type Cuisine = 'italian' | 'german' | 'japanese' | 'gourmet' | 'indian' | 'fusion';
 
+/** Dietary preference. */
 export type Diet = 'vegetarian' | 'vegan' | 'keto' | 'none';
 
+/** Preferences of generator step 2. */
 export interface Preferences {
   portions: number;
   cooks: number;

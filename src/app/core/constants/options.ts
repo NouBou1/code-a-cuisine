@@ -1,5 +1,6 @@
 import { CookingTime, Cuisine, Diet } from '../models/preferences.model';
 
+/** Selectable option with value and display label. */
 export interface Option<T> {
   value: T;
   label: string;
@@ -18,6 +19,7 @@ export const DIET_OPTIONS: readonly Option<Diet>[] = [
   { value: 'none', label: 'No preferences' },
 ];
 
+/** Cuisine with emoji and image paths for cards and banners. */
 export interface CuisineInfo extends Option<Cuisine> {
   emoji: string;
   image: string;

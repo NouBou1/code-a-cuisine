@@ -2,11 +2,13 @@ import { Ingredient } from './ingredient.model';
 import { Preferences } from './preferences.model';
 import { Recipe } from './recipe.model';
 
+/** Payload of the generate webhook. */
 export interface GenerateRecipesRequest {
   ingredients: Omit<Ingredient, 'id'>[];
   preferences: Preferences;
 }
 
+/** Answer of the generate webhook. */
 export interface GenerateRecipesResponse {
   recipes: Recipe[];
 }

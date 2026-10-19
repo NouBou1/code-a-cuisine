@@ -8,6 +8,7 @@ import {
 } from '../../../../core/models/ingredient.model';
 import { MAX_AMOUNT } from '../../../../core/state/generator.store';
 
+/** New amount and unit of an edited ingredient. */
 export interface IngredientChange {
   amount: number;
   unit: IngredientUnit;

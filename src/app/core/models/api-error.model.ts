@@ -1,3 +1,4 @@
+/** Normalized error of n8n or the network; `code` comes from the backend. */
 export interface ApiError {
   status: number;
   code?: string;

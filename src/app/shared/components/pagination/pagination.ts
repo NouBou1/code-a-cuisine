@@ -1,6 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
 
 export const GAP = 'gap';
+/** Entry of the pagination: a page number or a gap. */
 export type PageItem = number | typeof GAP;
 
 /** Page navigation like `< 1 2 3 … 8 >`. */

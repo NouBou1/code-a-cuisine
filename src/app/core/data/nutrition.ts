@@ -1,5 +1,6 @@
 import { Nutrition } from '../models/recipe.model';
 
+/** Share of protein, fat and carbs in percent. */
 export type MacroShares = Pick<Nutrition, 'protein' | 'fat' | 'carbs'>;
 
 const KCAL_PER_GRAM: MacroShares = { protein: 4, fat: 9, carbs: 4 };

@@ -1,10 +1,12 @@
 import { CookingTime, Cuisine, Diet } from './preferences.model';
 
+/** Ingredient line of a recipe, e.g. `200g` Pasta. */
 export interface RecipeIngredient {
   quantity: string;
   name: string;
 }
 
+/** Preparation step, assigned to one chef. */
 export interface RecipeStep {
   title: string;
   description: string;
@@ -13,6 +15,7 @@ export interface RecipeStep {
   parallel?: boolean;
 }
 
+/** Nutritional values per portion; kcal and grams. */
 export interface Nutrition {
   kcal: number;
   protein: number;
@@ -20,6 +23,7 @@ export interface Nutrition {
   carbs: number;
 }
 
+/** Generated recipe as stored in the Realtime Database. */
 export interface Recipe {
   id: string;
   title: string;

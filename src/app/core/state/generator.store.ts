@@ -25,6 +25,7 @@ interface GeneratorState {
   results: Recipe[];
 }
 
+/** Ingredient values without id, e.g. from the form. */
 export type IngredientInput = Pick<Ingredient, 'name' | 'amount' | 'unit'>;
 
 /** Shared state of the generator steps, persisted in sessionStorage. */

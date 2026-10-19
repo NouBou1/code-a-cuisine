@@ -1,7 +1,9 @@
+/** Unit of an entered ingredient. */
 export type IngredientUnit = 'gram' | 'ml' | 'piece';
 
 export const INGREDIENT_UNITS: readonly IngredientUnit[] = ['gram', 'ml', 'piece'];
 
+/** Ingredient entered by the user. */
 export interface Ingredient {
   id: string;
   name: string;
