@@ -6,7 +6,7 @@ AI-gestützter Rezeptgenerator: Nutzer geben ihre vorhandenen Zutaten und Präfe
 
 - **Generator in zwei Schritten**: Zutaten (mit Menge und Einheit, bearbeiten/löschen) → Präferenzen (Portionen, Anzahl Köche, Kochzeit, Küche, Ernährung)
 - **Ladeanimation** während der Generierung, **Fehler-Pop-up** bei unzureichenden Zutaten
-- **Rezeptansicht** mit Nährwerten, eigenen und zusätzlichen Zutaten, Arbeitsschritten pro Koch und Like-Funktion (1× pro Browser)
+- **Rezeptansicht** mit Nährwerten (pro Portion oder gesamt, Makro-Anteile in %), eigenen und zusätzlichen Zutaten, Arbeitsschritten pro Koch und Like-Funktion (1× pro Browser)
 - **Kochbuch** mit den beliebtesten Rezepten und Kategorien je Küche inkl. Pagination
 - **Impressum** über den Footer auf jeder Seite erreichbar
 - Responsive (Mobile, Desktop, Widescreen ab 1440 px), semantisches HTML, tastaturbedienbar
