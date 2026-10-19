@@ -8,6 +8,14 @@
           ".write": "data.exists() && newData.isNumber() && newData.val() === data.val() + 1"
         }
       }
+    },
+    "quota": {
+      ".read": false,
+      ".write": false
+    },
+    "logs": {
+      ".read": false,
+      ".write": false
     }
   }
 }
