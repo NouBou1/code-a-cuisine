@@ -104,7 +104,23 @@
       </fieldset>
     </div>
 
-    <button type="submit" class="btn-primary" [disabled]="loading()">Generate a recipe</button>
+    <button
+      type="submit"
+      class="btn-primary"
+      [disabled]="loading() || !store.hasQuotaLeft()"
+      aria-describedby="quota-info"
+    >
+      Generate a recipe
+    </button>
+    <p id="quota-info" class="quota" aria-live="polite">
+      @if (store.quota(); as quota) {
+        @if (quota.remaining > 0) {
+          {{ quota.remaining }} of {{ quota.limit }} recipe generations left today
+        } @else {
+          No recipe generations left today. Come back tomorrow!
+        }
+      }
+    </p>
   </form>
 </main>
 

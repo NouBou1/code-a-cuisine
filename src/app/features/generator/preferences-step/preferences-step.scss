@@ -45,6 +45,15 @@
   }
 }
 
+// Space is reserved so the line does not shift the page when the quota arrives
+.quota {
+  min-height: 18px;
+  margin-top: -16px;
+  font-size: 14px;
+  text-align: center;
+  color: $green;
+}
+
 .counters {
   display: flex;
   flex-wrap: wrap;

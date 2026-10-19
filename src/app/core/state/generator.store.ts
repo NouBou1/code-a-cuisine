@@ -1,9 +1,14 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { Observable, finalize, of, retry, tap, throwError } from 'rxjs';
-import { hasEnoughIngredients, insufficientIngredientsError } from '../data/generation.validation';
+import {
+  hasEnoughIngredients,
+  insufficientIngredientsError,
+  quotaExceededError,
+} from '../data/generation.validation';
 import { RecipeGenerator } from '../data/recipe-generator';
 import { isRecipe } from '../data/recipe.validation';
-import { RECIPE_RULES_NOT_MET, isApiError } from '../models/api-error.model';
+import { QUOTA_EXCEEDED, RECIPE_RULES_NOT_MET, isApiError } from '../models/api-error.model';
+import { QuotaStatus } from '../models/generation.model';
 import { Ingredient, IngredientUnit } from '../models/ingredient.model';
 import { DEFAULT_PREFERENCES, Preferences } from '../models/preferences.model';
 import { Recipe } from '../models/recipe.model';
@@ -31,6 +36,12 @@ export class GeneratorStore {
 
   /** `true` while a second attempt runs because the recipes broke the rules. */
   readonly retrying = this.retryingState.asReadonly();
+
+  private readonly quotaState = signal<QuotaStatus | null>(null);
+
+  /** Remaining generations of today; `null` until loaded or if n8n is unreachable. */
+  readonly quota = this.quotaState.asReadonly();
+  readonly hasQuotaLeft = computed(() => (this.quota()?.remaining ?? 1) > 0);
 
   readonly ingredients = computed(() => this.state().ingredients);
   readonly preferences = computed(() => this.state().preferences);
@@ -106,11 +117,29 @@ export class GeneratorStore {
     }));
     const request = { ingredients, preferences: this.preferences() };
     if (!hasEnoughIngredients(request)) return throwError(insufficientIngredientsError);
+    const quota = this.quota();
+    if (quota && quota.remaining <= 0) return throwError(() => quotaExceededError(quota.limit));
     return this.generator.generate(request).pipe(
       retry({ count: RULE_RETRY_COUNT, delay: (error) => this.retryOnRuleError(error) }),
-      tap((results) => this.patch({ results })),
+      tap({
+        next: (results) => {
+          this.patch({ results });
+          this.updateRemaining((remaining) => remaining - 1);
+        },
+        error: (error: unknown) => {
+          if (isApiError(error) && error.code === QUOTA_EXCEEDED) this.updateRemaining(() => 0);
+        },
+      }),
       finalize(() => this.retryingState.set(false)),
     );
+  }
+
+  /** Loads the remaining generations of today; without an answer, n8n decides alone. */
+  loadQuota(): void {
+    this.generator.quota().subscribe({
+      next: (quota) => this.quotaState.set(quota),
+      error: () => this.quotaState.set(null),
+    });
   }
 
   /** Clears the generator for a new run. */
@@ -127,6 +156,16 @@ export class GeneratorStore {
     if (!isApiError(error) || error.code !== RECIPE_RULES_NOT_MET) return throwError(() => error);
     this.retryingState.set(true);
     return of(true);
+  }
+
+  /**
+   * Changes the remaining generations, if the quota is known.
+   * @param change - Calculates the new value from the old one.
+   */
+  private updateRemaining(change: (remaining: number) => number): void {
+    this.quotaState.update((quota) =>
+      quota ? { ...quota, remaining: Math.max(0, change(quota.remaining)) } : quota,
+    );
   }
 
   /**

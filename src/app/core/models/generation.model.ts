@@ -11,4 +11,10 @@ export interface GenerateRecipesResponse {
   recipes: Recipe[];
 }
 
+/** Remaining generations of the client today, limited per IP and system-wide. */
+export interface QuotaStatus {
+  remaining: number;
+  limit: number;
+}
+
 export const RECIPES_PER_GENERATION = 3;

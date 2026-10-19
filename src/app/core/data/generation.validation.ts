@@ -1,4 +1,4 @@
-import { ApiError, INSUFFICIENT_INGREDIENTS } from '../models/api-error.model';
+import { ApiError, INSUFFICIENT_INGREDIENTS, QUOTA_EXCEEDED } from '../models/api-error.model';
 import { GenerateRecipesRequest } from '../models/generation.model';
 
 export const MIN_GRAMS_PER_PORTION = 100;
@@ -18,6 +18,19 @@ export function hasEnoughIngredients({
     0,
   );
   return ingredients.length > 0 && total >= preferences.portions * MIN_GRAMS_PER_PORTION;
+}
+
+/**
+ * Builds the error for a used up daily quota, like the n8n workflow.
+ * @param limit - Generations per day.
+ * @returns The `ApiError` with status 429.
+ */
+export function quotaExceededError(limit: number): ApiError {
+  return {
+    status: 429,
+    code: QUOTA_EXCEEDED,
+    message: `You have used all ${limit} recipe generations for today. Come back tomorrow or browse the cookbook.`,
+  };
 }
 
 /**

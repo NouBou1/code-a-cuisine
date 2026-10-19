@@ -1,6 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, TimeoutError, retry, throwError, timeout, timer } from 'rxjs';
+import {
+  MonoTypeOperatorFunction,
+  Observable,
+  TimeoutError,
+  pipe,
+  retry,
+  throwError,
+  timeout,
+  timer,
+} from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { isApiError } from '../models/api-error.model';
 
@@ -21,14 +30,31 @@ export class N8nService {
    * @returns The webhook response.
    */
   post<TReq, TRes>(path: string, body: TReq): Observable<TRes> {
-    return this.http.post<TRes>(`${this.baseUrl}/${path}`, body).pipe(
-      timeout(REQUEST_TIMEOUT_MS),
-      retry({
-        count: RETRY_COUNT,
-        delay: (error) => (isRetryable(error) ? timer(RETRY_DELAY_MS) : throwError(() => error)),
-      }),
-    );
+    return this.http.post<TRes>(`${this.baseUrl}/${path}`, body).pipe(withRetry());
   }
+
+  /**
+   * Sends a GET request to a webhook.
+   * @param path - Webhook path, e.g. `recipes/quota`.
+   * @returns The webhook response.
+   */
+  get<TRes>(path: string): Observable<TRes> {
+    return this.http.get<TRes>(`${this.baseUrl}/${path}`).pipe(withRetry());
+  }
+}
+
+/**
+ * Adds the timeout and one retry for network and server errors.
+ * @returns The operator for a webhook request.
+ */
+function withRetry<T>(): MonoTypeOperatorFunction<T> {
+  return pipe(
+    timeout(REQUEST_TIMEOUT_MS),
+    retry({
+      count: RETRY_COUNT,
+      delay: (error) => (isRetryable(error) ? timer(RETRY_DELAY_MS) : throwError(() => error)),
+    }),
+  );
 }
 
 /**

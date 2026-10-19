@@ -2,7 +2,12 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { COOKING_TIME_OPTIONS, CUISINES, DIET_OPTIONS } from '../../../core/constants/options';
-import { INSUFFICIENT_INGREDIENTS, isApiError } from '../../../core/models/api-error.model';
+import {
+  INSUFFICIENT_INGREDIENTS,
+  INVALID_CLIENT,
+  QUOTA_EXCEEDED,
+  isApiError,
+} from '../../../core/models/api-error.model';
 import {
   COOK_LIMITS,
   CookingTime,
@@ -20,7 +25,8 @@ interface DialogContent {
   title: string;
   message: string;
   actionLabel: string;
-  backToIngredients: boolean;
+  /** Page the action opens; `null` only closes the pop-up. */
+  link: string | null;
 }
 
 /** Generator step 2: choose preferences and start the generation. */
@@ -45,6 +51,10 @@ export class PreferencesStep {
 
   protected readonly loading = signal(false);
   protected readonly dialog = signal<DialogContent | null>(null);
+
+  constructor() {
+    this.store.loadQuota();
+  }
 
   /**
    * Sets the number of portions.
@@ -102,9 +112,10 @@ export class PreferencesStep {
       });
   }
 
-  /** Goes back to the ingredients if the error requires it. */
+  /** Opens the page of the pop-up action, e.g. the ingredients. */
   protected onDialogAction(): void {
-    if (this.dialog()?.backToIngredients) this.router.navigate(['/generate']);
+    const link = this.dialog()?.link;
+    if (link) this.router.navigate([link]);
   }
 }
 
@@ -114,26 +125,42 @@ export class PreferencesStep {
  * @returns Title, message and action.
  */
 function toDialogContent(error: unknown): DialogContent {
-  if (isApiError(error) && error.code === INSUFFICIENT_INGREDIENTS) {
+  if (!isApiError(error)) {
+    return {
+      title: 'Ups! Something went wrong...',
+      message: 'Please try again in a moment.',
+      actionLabel: 'Try again later',
+      link: null,
+    };
+  }
+  if (error.code === QUOTA_EXCEEDED) {
+    return {
+      title: 'Ups! That’s it for today...',
+      message: error.message,
+      actionLabel: 'Go to cookbook',
+      link: '/cookbook',
+    };
+  }
+  if (error.code === INSUFFICIENT_INGREDIENTS) {
     return {
       title: 'Ups! Not quite enough...',
       message: error.message,
       actionLabel: 'Go back to ingredients',
-      backToIngredients: true,
+      link: '/generate',
     };
   }
-  if (isApiError(error) && (error.status === 400 || error.status === 422)) {
+  if (error.code !== INVALID_CLIENT && (error.status === 400 || error.status === 422)) {
     return {
       title: 'Ups! Something doesn’t fit...',
       message: error.message,
       actionLabel: 'Go back to ingredients',
-      backToIngredients: true,
+      link: '/generate',
     };
   }
   return {
     title: 'Ups! Something went wrong...',
-    message: isApiError(error) ? error.message : 'Please try again in a moment.',
+    message: error.message,
     actionLabel: 'Try again later',
-    backToIngredients: false,
+    link: null,
   };
 }

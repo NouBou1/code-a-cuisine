@@ -1,13 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import { defer, of, throwError } from 'rxjs';
 import { RecipeGenerator } from '../data/recipe-generator';
-import { INSUFFICIENT_INGREDIENTS, RECIPE_RULES_NOT_MET } from '../models/api-error.model';
+import {
+  INSUFFICIENT_INGREDIENTS,
+  QUOTA_EXCEEDED,
+  RECIPE_RULES_NOT_MET,
+} from '../models/api-error.model';
 import { SEED_RECIPES } from '../data/seed-recipes';
 import { GeneratorStore, MAX_INGREDIENTS, normalizeIngredient } from './generator.store';
 
 describe('GeneratorStore', () => {
   let store: GeneratorStore;
-  const generator = { generate: vi.fn(() => of(SEED_RECIPES.slice(0, 3))) };
+  const generator = {
+    generate: vi.fn(() => of(SEED_RECIPES.slice(0, 3))),
+    quota: vi.fn(() => of({ remaining: 1, limit: 3 })),
+  };
 
   beforeEach(() => {
     sessionStorage.clear();
@@ -124,6 +131,42 @@ describe('GeneratorStore', () => {
       generator.generate.mockReturnValueOnce(answer);
       store.generate().subscribe({ error: vi.fn() });
       expect(attempts.count).toBe(1);
+    });
+  });
+
+  describe('quota', () => {
+    beforeEach(() => store.addIngredient({ name: 'Pasta', amount: 400, unit: 'gram' }));
+
+    it('counts down after a successful generation', () => {
+      store.loadQuota();
+      store.generate().subscribe();
+      expect(store.quota()).toEqual({ remaining: 0, limit: 3 });
+      expect(store.hasQuotaLeft()).toBe(false);
+    });
+
+    it('blocks the generation without a request when nothing is left', () => {
+      generator.quota.mockReturnValueOnce(of({ remaining: 0, limit: 3 }));
+      generator.generate.mockClear();
+      store.loadQuota();
+      const error = vi.fn();
+      store.generate().subscribe({ error });
+      expect(generator.generate).not.toHaveBeenCalled();
+      expect(error).toHaveBeenCalledWith(expect.objectContaining({ code: QUOTA_EXCEEDED }));
+    });
+
+    it('sets the quota to 0 when n8n rejects the request', () => {
+      store.loadQuota();
+      const quotaError = { status: 429, code: QUOTA_EXCEEDED, message: 'Limit reached' };
+      generator.generate.mockReturnValueOnce(throwError(() => quotaError));
+      store.generate().subscribe({ error: vi.fn() });
+      expect(store.quota()?.remaining).toBe(0);
+    });
+
+    it('lets n8n decide if the quota could not be loaded', () => {
+      generator.quota.mockReturnValueOnce(throwError(() => new Error('offline')));
+      store.loadQuota();
+      expect(store.quota()).toBeNull();
+      expect(store.hasQuotaLeft()).toBe(true);
     });
   });
 
