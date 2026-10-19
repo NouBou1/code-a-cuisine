@@ -36,6 +36,17 @@ In `src/environments/environment.ts` (Produktion) und `environment.development.t
 
 Den n8n-Workflow zum Importieren enthält der Ordner [n8n/](n8n/).
 
+### Fehlerbehandlung in n8n
+
+Schlägt die Generierung fehl (Gemini oder Firebase), antwortet der Workflow mit 502 und markiert die Ausführung anschließend als fehlgeschlagen. Der Fehler-Workflow protokolliert das in der Realtime Database unter `/logs/errors` und verschickt eine E-Mail.
+
+1. `n8n/code-a-cuisine – error handler.json` importieren.
+2. Im Node „Send error mail“ ein SMTP-Credential auswählen und die Platzhalter `ERROR_MAIL_FROM@example.com` und `ERROR_MAIL_TO@example.com` durch echte Adressen ersetzen.
+3. Im Node „Log to Firebase“ das Credential „Firebase Service Account“ auswählen.
+4. Im Generator-Workflow unter *Settings → Error Workflow* den Fehler-Workflow auswählen.
+
+Manuelle Testausführungen lösen den Fehler-Workflow nicht aus.
+
 ### Realtime Database einrichten
 
 - Regeln und Indizes liegen in `database.rules.json` und werden mit `npx firebase-tools deploy --only database` hochgeladen.
