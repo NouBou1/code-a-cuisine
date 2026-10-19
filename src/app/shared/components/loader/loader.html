@@ -4,9 +4,14 @@
     <div class="card">
       <img class="spinner" src="assets/images/loading-spinner.webp" alt="" width="436" height="613" />
     </div>
-    <p class="text">
-      {{ text() }}
-      <span class="dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>
-    </p>
+    <div class="message">
+      <p class="text">
+        {{ text() }}
+        <span class="dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>
+      </p>
+      @if (hint()) {
+        <p class="hint">{{ hint() }}</p>
+      }
+    </div>
   </div>
 </div>

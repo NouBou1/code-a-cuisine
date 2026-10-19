@@ -40,6 +40,8 @@ export class PreferencesStep {
   protected readonly diets = DIET_OPTIONS;
   protected readonly portionLimits = PORTION_LIMITS;
   protected readonly cookLimits = COOK_LIMITS;
+  protected readonly retryHint =
+    'The first recipes didn’t fit your ingredients well enough, so we’re cooking up new ones.';
 
   protected readonly loading = signal(false);
   protected readonly dialog = signal<DialogContent | null>(null);

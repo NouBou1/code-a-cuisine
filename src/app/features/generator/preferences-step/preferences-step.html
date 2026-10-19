@@ -1,5 +1,8 @@
 @if (loading()) {
-  <app-loader text="Generating" />
+  <app-loader
+    [text]="store.retrying() ? 'Second try' : 'Generating'"
+    [hint]="store.retrying() ? retryHint : ''"
+  />
 }
 
 <app-menu-bar backLink="/generate" backLabel="Ingredients" />

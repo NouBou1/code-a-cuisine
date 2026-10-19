@@ -6,6 +6,7 @@ export interface ApiError {
 }
 
 export const INSUFFICIENT_INGREDIENTS = 'INSUFFICIENT_INGREDIENTS';
+export const RECIPE_RULES_NOT_MET = 'RECIPE_RULES_NOT_MET';
 
 /**
  * Checks whether a value is an `ApiError`.

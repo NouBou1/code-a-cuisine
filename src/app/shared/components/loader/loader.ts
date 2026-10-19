@@ -10,4 +10,5 @@ import { MenuBar } from '../menu-bar/menu-bar';
 })
 export class Loader {
   readonly text = input('Generating');
+  readonly hint = input('');
 }

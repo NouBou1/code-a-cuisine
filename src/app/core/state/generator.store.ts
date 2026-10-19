@@ -1,8 +1,9 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { Observable, tap, throwError } from 'rxjs';
+import { Observable, finalize, of, retry, tap, throwError } from 'rxjs';
 import { hasEnoughIngredients, insufficientIngredientsError } from '../data/generation.validation';
 import { RecipeGenerator } from '../data/recipe-generator';
 import { isRecipe } from '../data/recipe.validation';
+import { RECIPE_RULES_NOT_MET, isApiError } from '../models/api-error.model';
 import { Ingredient, IngredientUnit } from '../models/ingredient.model';
 import { DEFAULT_PREFERENCES, Preferences } from '../models/preferences.model';
 import { Recipe } from '../models/recipe.model';
@@ -11,6 +12,7 @@ const STORAGE_KEY = 'cac-generator';
 export const MAX_INGREDIENT_NAME_LENGTH = 40;
 export const MAX_INGREDIENTS = 20;
 export const MAX_AMOUNT = 10_000;
+const RULE_RETRY_COUNT = 1;
 
 interface GeneratorState {
   ingredients: Ingredient[];
@@ -25,6 +27,10 @@ export type IngredientInput = Pick<Ingredient, 'name' | 'amount' | 'unit'>;
 export class GeneratorStore {
   private readonly generator = inject(RecipeGenerator);
   private readonly state = signal<GeneratorState>(loadState());
+  private readonly retryingState = signal(false);
+
+  /** `true` while a second attempt runs because the recipes broke the rules. */
+  readonly retrying = this.retryingState.asReadonly();
 
   readonly ingredients = computed(() => this.state().ingredients);
   readonly preferences = computed(() => this.state().preferences);
@@ -89,6 +95,7 @@ export class GeneratorStore {
 
   /**
    * Generates recipes and stores them as results; too few ingredients fail without a request.
+   * Retries once if the recipes broke the rules (ingredient share, extra ingredients).
    * @returns The generated recipes, or an `ApiError`.
    */
   generate(): Observable<Recipe[]> {
@@ -99,12 +106,27 @@ export class GeneratorStore {
     }));
     const request = { ingredients, preferences: this.preferences() };
     if (!hasEnoughIngredients(request)) return throwError(insufficientIngredientsError);
-    return this.generator.generate(request).pipe(tap((results) => this.patch({ results })));
+    return this.generator.generate(request).pipe(
+      retry({ count: RULE_RETRY_COUNT, delay: (error) => this.retryOnRuleError(error) }),
+      tap((results) => this.patch({ results })),
+      finalize(() => this.retryingState.set(false)),
+    );
   }
 
   /** Clears the generator for a new run. */
   reset(): void {
     this.state.set(initialState());
+  }
+
+  /**
+   * Starts another attempt for rule errors and passes every other error on.
+   * @param error - Error of the failed attempt.
+   * @returns A notifier for the retry, or the error.
+   */
+  private retryOnRuleError(error: unknown): Observable<unknown> {
+    if (!isApiError(error) || error.code !== RECIPE_RULES_NOT_MET) return throwError(() => error);
+    this.retryingState.set(true);
+    return of(true);
   }
 
   /**

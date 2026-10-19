@@ -36,6 +36,28 @@
   height: auto;
 }
 
+// Hint is positioned below the text so it does not move the spinner
+.message {
+  position: relative;
+}
+
+.hint {
+  position: absolute;
+  top: calc(100% + 16px);
+  left: 50%;
+  width: min(480px, calc(100vw - 32px));
+  transform: translateX(-50%);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 26px;
+  text-align: center;
+
+  @include mobile {
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
+
 .text {
   font-family: $font-display;
   font-size: 48px;
