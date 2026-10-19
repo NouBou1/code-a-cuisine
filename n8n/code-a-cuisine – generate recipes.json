@@ -16,7 +16,9 @@
         -1760,
         400
       ],
-      "webhookId": "099ef11b-9d78-4906-9b33-779feae68e19"
+      "webhookId": "099ef11b-9d78-4906-9b33-779feae68e19",
+      "notes": "Entry point: POST /recipes/generate with ingredients and preferences from the Angular app.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -29,7 +31,9 @@
       "position": [
         -1536,
         400
-      ]
+      ],
+      "notes": "Checks ingredients (1-20, name, amount, unit) and preferences again, independent of the frontend. Too little food for the portions -> 422 INSUFFICIENT_INGREDIENTS.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -63,7 +67,9 @@
       "position": [
         -1328,
         400
-      ]
+      ],
+      "notes": "Valid input goes on to the prompt, invalid input is answered right away.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -80,7 +86,9 @@
       "position": [
         -1088,
         688
-      ]
+      ],
+      "notes": "Answers with 400 INVALID_INPUT or 422 INSUFFICIENT_INGREDIENTS.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -93,7 +101,9 @@
       "position": [
         -1104,
         400
-      ]
+      ],
+      "notes": "Builds the Gemini request: prompt with all recipe rules (70 % of the ingredients, max. 3 extras, beginner friendly) and a JSON response schema.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -125,7 +135,9 @@
           "name": "Gemini API Key"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "notes": "Calls the main Gemini model. Retries once, errors go to the fallback model.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -154,7 +166,9 @@
           "name": "Gemini API Key"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "notes": "Same request with the lighter fallback model if the main model fails.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -168,7 +182,9 @@
         -448,
         384
       ],
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "notes": "Parses the Gemini answer. Wrong format -> generator error. Rule violation (ingredient share, extras) -> RECIPE_RULES_NOT_MET.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -198,7 +214,9 @@
           "name": "Firebase Service Account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "notes": "Saves every recipe in the Realtime Database (/recipes) and gets its id back.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -211,7 +229,9 @@
       "position": [
         256,
         368
-      ]
+      ],
+      "notes": "Combines the saved ids with the recipes for the response.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -224,7 +244,9 @@
       "position": [
         496,
         368
-      ]
+      ],
+      "notes": "Answers with 200 and the 3 generated recipes.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -241,7 +263,9 @@
       "position": [
         -128,
         688
-      ]
+      ],
+      "notes": "Answers with 502 if Gemini or Firebase fail.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -275,7 +299,9 @@
         384
       ],
       "id": "a691eec8-5469-4b1f-9f06-da8fd2197aee",
-      "name": "Rules met?"
+      "name": "Rules met?",
+      "notes": "Valid recipes are saved, rule violations are answered with 422 so the app can retry.",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -292,7 +318,9 @@
         560
       ],
       "id": "5a9f654f-1762-487c-8414-1ef7490fcda1",
-      "name": "Respond rules not met"
+      "name": "Respond rules not met",
+      "notes": "Answers with 422 RECIPE_RULES_NOT_MET; the app retries once automatically.",
+      "notesInFlow": true
     }
   ],
   "pinData": {},
