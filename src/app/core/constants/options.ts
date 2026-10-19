@@ -7,7 +7,7 @@ export interface Option<T> {
 
 export const COOKING_TIME_OPTIONS: readonly (Option<CookingTime> & { hint: string })[] = [
   { value: 'quick', label: 'Quick', hint: 'up to 20min' },
-  { value: 'medium', label: 'Medium', hint: '25-40min' },
+  { value: 'medium', label: 'Medium', hint: '20-45min' },
   { value: 'complex', label: 'Complex', hint: 'over 45min' },
 ];
 
