@@ -8,6 +8,7 @@ AI-gestützter Rezeptgenerator: Nutzer geben ihre vorhandenen Zutaten und Präfe
 - **Ladeanimation** während der Generierung, **Fehler-Pop-up** bei unzureichenden Zutaten
 - **Rezeptansicht** mit Nährwerten (pro Portion oder gesamt, Makro-Anteile in %), eigenen und zusätzlichen Zutaten, Arbeitsschritten pro Koch und Like-Funktion (1× pro Browser)
 - **Kochbuch** mit den beliebtesten Rezepten und Kategorien je Küche inkl. Pagination
+- **Tageslimit** pro IP (3 Generierungen) und systemweit (12) mit Anzeige der verbleibenden Generierungen
 - **Impressum** über den Footer auf jeder Seite erreichbar
 - Responsive (Mobile, Desktop, Widescreen ab 1440 px), semantisches HTML, tastaturbedienbar
 
@@ -36,6 +37,13 @@ In `src/environments/environment.ts` (Produktion) und `environment.development.t
 2. `n8n.baseUrl` – z. B. `https://n8n.example.com/webhook` (Entwicklung: `/webhook-test`)
 
 Den n8n-Workflow zum Importieren enthält der Ordner [n8n/](n8n/).
+
+### Quota (Schutz des Gemini-Kontingents)
+
+- Pro IP-Adresse sind **3 Generierungen pro Tag** möglich, systemweit **12** (Tag nach deutscher Zeit).
+- Gezählt werden nur erfolgreiche Generierungen. n8n prüft das Limit vor dem Gemini-Aufruf und zählt nach dem Speichern atomar hoch.
+- Die IP stammt aus `X-Forwarded-For` bzw. `X-Real-IP` (n8n läuft hinter einem Reverse Proxy), wird validiert (IPv4/IPv6) und nur als SHA-256-Hash zusammen mit dem Datum unter `/quota/{datum}` gespeichert.
+- `GET /recipes/quota` liefert die verbleibenden Generierungen, die App zeigt sie im Präferenzen-Schritt an. Ist das Limit erreicht, antwortet n8n mit 429 `QUOTA_EXCEEDED`.
 
 ### Fehlerbehandlung in n8n
 
