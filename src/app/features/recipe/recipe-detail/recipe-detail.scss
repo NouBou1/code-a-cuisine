@@ -285,14 +285,17 @@
   }
 }
 
+// Bullet, quantity and name share the columns of the list, so all names line up
 .ingredient-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  column-gap: 16px;
   font-size: 24px;
 
   li {
-    display: flex;
-    gap: 16px;
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
 
     &::before {
       content: '•';
@@ -300,7 +303,7 @@
   }
 
   .quantity {
-    min-width: 72px;
+    white-space: nowrap;
   }
 
   @include mobile {
