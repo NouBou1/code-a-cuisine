@@ -1,0 +1,117 @@
+{
+  "name": "code-a-cuisine – error handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d809b8dc-59f6-4aff-b884-ac88ffe58fd8",
+      "name": "Error Trigger",
+      "notes": "Starts when an execution of a workflow that uses this error workflow fails.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const { execution = {}, workflow = {}, trigger } = $input.first().json;\nconst error = execution.error ?? trigger?.error ?? {};\n\nreturn [\n  {\n    json: {\n      workflow: workflow.name ?? 'unknown',\n      executionId: execution.id ?? null,\n      executionUrl: execution.url ?? null,\n      node: execution.lastNodeExecuted ?? error.node?.name ?? 'unknown',\n      message: error.message ?? 'Unknown error',\n      mode: execution.mode ?? null,\n      createdAt: Date.now(),\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "ffd551c6-d7c6-4602-a344-8988ef089718",
+      "name": "Build error report",
+      "notes": "Collects workflow, node, message and execution link of the failed run.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://code-a-cuisine-28274-default-rtdb.europe-west1.firebasedatabase.app/logs/errors.json",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        448,
+        -112
+      ],
+      "id": "de49e57f-b7b1-41a0-9a2d-44b75656150f",
+      "name": "Log to Firebase",
+      "credentials": {
+        "googleApi": {
+          "id": "81y2RURzvRx22bgn",
+          "name": "Firebase Service Account"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "Stores the report under /logs/errors in the Realtime Database (not readable by clients).",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "ERROR_MAIL_FROM@example.com",
+        "toEmail": "ERROR_MAIL_TO@example.com",
+        "subject": "={{ \"[Code à Cuisine] Error in \" + $json.workflow }}",
+        "emailFormat": "text",
+        "text": "={{ \"Workflow: \" + $json.workflow }}\n{{ \"Node: \" + $json.node }}\n{{ \"Message: \" + $json.message }}\n{{ \"Time: \" + new Date($json.createdAt).toISOString() }}\n{{ \"Execution: \" + ($json.executionUrl ?? $json.executionId ?? \"-\") }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        448,
+        112
+      ],
+      "id": "026c04f3-0213-44f3-9ca8-67f41dca28f8",
+      "name": "Send error mail",
+      "notes": "Sends the report via SMTP. Set sender, recipient and SMTP credential after the import.",
+      "notesInFlow": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Build error report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build error report": {
+      "main": [
+        [
+          {
+            "node": "Log to Firebase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send error mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

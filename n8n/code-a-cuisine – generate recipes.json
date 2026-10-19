@@ -321,6 +321,21 @@
       "name": "Respond rules not met",
       "notes": "Answers with 422 RECIPE_RULES_NOT_MET; the app retries once automatically.",
       "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $json.error?.message ?? 'Recipe generation failed' }}"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        112,
+        688
+      ],
+      "id": "5fa26cbe-606f-4ca7-a8f9-18404e912ca4",
+      "name": "Fail execution",
+      "notes": "Marks the execution as failed after the 502 answer so the error handler workflow logs it and sends a mail.",
+      "notesInFlow": true
     }
   ],
   "pinData": {},
@@ -471,6 +486,17 @@
         [
           {
             "node": "Respond rules not met",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond generator error": {
+      "main": [
+        [
+          {
+            "node": "Fail execution",
             "type": "main",
             "index": 0
           }
