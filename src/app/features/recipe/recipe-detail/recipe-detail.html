@@ -36,29 +36,58 @@
             }
             <li><app-likes-tag [count]="likes()" /></li>
           </ul>
-          <section aria-labelledby="nutrition-title">
-            <h2 id="nutrition-title" class="nutrition-title">
-              Nutritional information <span class="per-portion">(per portion)</span>
-            </h2>
-            <dl class="nutrition">
-              <div>
-                <dt>Energy</dt>
-                <dd>{{ recipe.nutrition.kcal }} kcal</dd>
+          @if (nutrition(); as nutrition) {
+            <section aria-labelledby="nutrition-title">
+              <div class="nutrition-head">
+                <h2 id="nutrition-title" class="nutrition-title">Nutritional information</h2>
+                @if (recipe.portions > 1) {
+                  <div class="scope" role="group" aria-label="Show nutritional values">
+                    <button
+                      type="button"
+                      [attr.aria-pressed]="nutritionScope() === 'portion'"
+                      (click)="nutritionScope.set('portion')"
+                    >
+                      Per portion
+                    </button>
+                    <button
+                      type="button"
+                      [attr.aria-pressed]="nutritionScope() === 'total'"
+                      (click)="nutritionScope.set('total')"
+                    >
+                      Total ({{ recipe.portions }} portions)
+                    </button>
+                  </div>
+                } @else {
+                  <span class="per-portion">(per portion)</span>
+                }
               </div>
-              <div>
-                <dt>Protein</dt>
-                <dd>{{ recipe.nutrition.protein }}g</dd>
-              </div>
-              <div>
-                <dt>Fat</dt>
-                <dd>{{ recipe.nutrition.fat }}g</dd>
-              </div>
-              <div>
-                <dt>Carbs</dt>
-                <dd>{{ recipe.nutrition.carbs }}g</dd>
-              </div>
-            </dl>
-          </section>
+              <dl class="nutrition">
+                <div>
+                  <dt>Energy</dt>
+                  <dd>{{ nutrition.kcal }} kcal</dd>
+                </div>
+                <div>
+                  <dt>Protein</dt>
+                  <dd>
+                    {{ nutrition.protein }}g <span class="share">{{ macroShares()?.protein }}%</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Fat</dt>
+                  <dd>
+                    {{ nutrition.fat }}g <span class="share">{{ macroShares()?.fat }}%</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Carbs</dt>
+                  <dd>
+                    {{ nutrition.carbs }}g <span class="share">{{ macroShares()?.carbs }}%</span>
+                  </dd>
+                </div>
+              </dl>
+              <p class="nutrition-note">% = share of the calories from protein, fat and carbs</p>
+            </section>
+          }
         </div>
       </header>
 

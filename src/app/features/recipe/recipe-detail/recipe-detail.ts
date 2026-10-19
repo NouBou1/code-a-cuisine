@@ -7,6 +7,7 @@ import {
   labelOf,
 } from '../../../core/constants/options';
 import { CookbookService } from '../../../core/data/cookbook.service';
+import { macroEnergyShares, scaleNutrition } from '../../../core/data/nutrition';
 import { LikeService } from '../../../core/services/like.service';
 import { GeneratorStore } from '../../../core/state/generator.store';
 import { ChefLabel } from '../../../shared/components/chef-label/chef-label';
@@ -69,6 +70,18 @@ export class RecipeDetail {
     const tags = [labelOf(COOKING_TIME_OPTIONS, recipe.cookingTime)];
     if (recipe.diet !== 'none') tags.unshift(labelOf(DIET_OPTIONS, recipe.diet));
     return tags;
+  });
+
+  protected readonly nutritionScope = signal<'portion' | 'total'>('portion');
+  protected readonly nutrition = computed(() => {
+    const recipe = this.recipe();
+    if (!recipe) return null;
+    const factor = this.nutritionScope() === 'total' ? recipe.portions : 1;
+    return scaleNutrition(recipe.nutrition, factor);
+  });
+  protected readonly macroShares = computed(() => {
+    const recipe = this.recipe();
+    return recipe ? macroEnergyShares(recipe.nutrition) : null;
   });
 
   protected readonly chefs = computed(() =>

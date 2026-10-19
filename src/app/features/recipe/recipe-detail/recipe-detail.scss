@@ -134,13 +134,60 @@
   }
 }
 
+.nutrition-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+}
+
 .nutrition-title {
-  margin-bottom: 8px;
   font-size: 18px;
   font-weight: 500;
 }
 
 .per-portion {
+  font-size: 14px;
+  color: $green;
+}
+
+// Toggle between per portion and total
+.scope {
+  display: flex;
+  gap: 4px;
+
+  button {
+    @include button-reset;
+    padding: 4px 10px;
+    border: 1px solid $green;
+    border-radius: 48px;
+    font-family: inherit;
+    font-size: 14px;
+    color: $green;
+
+    &:hover {
+      background: $green-mist;
+    }
+
+    &[aria-pressed='true'] {
+      background: $green;
+      color: $creme;
+    }
+  }
+}
+
+// Own line so the columns keep their width on small screens
+.share {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  color: $green;
+}
+
+.nutrition-note {
+  margin-top: 8px;
   font-size: 14px;
   color: $green;
 }
