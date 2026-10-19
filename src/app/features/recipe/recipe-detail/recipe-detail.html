@@ -105,7 +105,7 @@
               <ul class="ingredient-list">
                 @for (item of recipe.ingredients; track $index) {
                   <li>
-                    <span class="quantity">{{ item.quantity }}</span>
+                    <span class="quantity">{{ item.quantity | quantity }}</span>
                     <span>{{ item.name }}</span>
                   </li>
                 }
@@ -117,7 +117,7 @@
                 <ul class="ingredient-list">
                   @for (item of recipe.extraIngredients; track $index) {
                     <li>
-                      <span class="quantity">{{ item.quantity }}</span>
+                      <span class="quantity">{{ item.quantity | quantity }}</span>
                       <span>{{ item.name }}</span>
                     </li>
                   }

@@ -14,6 +14,7 @@ import { ChefLabel } from '../../../shared/components/chef-label/chef-label';
 import { LikesTag } from '../../../shared/components/likes-tag/likes-tag';
 import { MenuBar } from '../../../shared/components/menu-bar/menu-bar';
 import { SectionBanner } from '../../../shared/components/section-banner/section-banner';
+import { QuantityPipe } from '../../../shared/pipes/quantity.pipe';
 
 interface BackLink {
   link: string | string[];
@@ -29,7 +30,7 @@ interface NutritionRow {
 
 /** Recipe detail; the back link depends on the `from` query param. */
 @Component({
-  imports: [MenuBar, RouterLink, ChefLabel, LikesTag, SectionBanner],
+  imports: [MenuBar, RouterLink, ChefLabel, LikesTag, SectionBanner, QuantityPipe],
   selector: 'app-recipe-detail',
   styleUrl: './recipe-detail.scss',
   templateUrl: './recipe-detail.html',
