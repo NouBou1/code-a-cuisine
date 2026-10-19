@@ -36,7 +36,7 @@
             }
             <li><app-likes-tag [count]="likes()" /></li>
           </ul>
-          @if (nutrition(); as nutrition) {
+          @if (nutritionRows(); as rows) {
             <section aria-labelledby="nutrition-title">
               <div class="nutrition-head">
                 <h2 id="nutrition-title" class="nutrition-title">Nutritional information</h2>
@@ -62,28 +62,28 @@
                 }
               </div>
               <dl class="nutrition">
-                <div>
-                  <dt>Energy</dt>
-                  <dd>{{ nutrition.kcal }} kcal</dd>
-                </div>
-                <div>
-                  <dt>Protein</dt>
-                  <dd>
-                    {{ nutrition.protein }}g <span class="share">{{ macroShares()?.protein }}%</span>
-                  </dd>
-                </div>
-                <div>
-                  <dt>Fat</dt>
-                  <dd>
-                    {{ nutrition.fat }}g <span class="share">{{ macroShares()?.fat }}%</span>
-                  </dd>
-                </div>
-                <div>
-                  <dt>Carbs</dt>
-                  <dd>
-                    {{ nutrition.carbs }}g <span class="share">{{ macroShares()?.carbs }}%</span>
-                  </dd>
-                </div>
+                @for (row of rows; track row.label) {
+                  <div>
+                    <dt>{{ row.label }}</dt>
+                    <dd>
+                      <span class="value-stack">
+                        <span
+                          [class.inactive]="nutritionScope() !== 'portion'"
+                          [attr.aria-hidden]="nutritionScope() !== 'portion'"
+                          >{{ row.portion }}</span
+                        >
+                        <span
+                          [class.inactive]="nutritionScope() !== 'total'"
+                          [attr.aria-hidden]="nutritionScope() !== 'total'"
+                          >{{ row.total }}</span
+                        >
+                      </span>
+                      @if (row.share !== null) {
+                        <span class="share">{{ row.share }}%</span>
+                      }
+                    </dd>
+                  </div>
+                }
               </dl>
               <p class="nutrition-note">% = share of the calories from protein, fat and carbs</p>
             </section>

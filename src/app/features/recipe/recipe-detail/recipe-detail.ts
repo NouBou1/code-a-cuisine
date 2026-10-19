@@ -20,6 +20,13 @@ interface BackLink {
   label: string;
 }
 
+interface NutritionRow {
+  label: string;
+  portion: string;
+  total: string;
+  share: number | null;
+}
+
 /** Recipe detail; the back link depends on the `from` query param. */
 @Component({
   imports: [MenuBar, RouterLink, ChefLabel, LikesTag, SectionBanner],
@@ -73,15 +80,34 @@ export class RecipeDetail {
   });
 
   protected readonly nutritionScope = signal<'portion' | 'total'>('portion');
-  protected readonly nutrition = computed(() => {
+  /** Both values per row are rendered so the columns keep their width when toggling. */
+  protected readonly nutritionRows = computed<NutritionRow[] | null>(() => {
     const recipe = this.recipe();
     if (!recipe) return null;
-    const factor = this.nutritionScope() === 'total' ? recipe.portions : 1;
-    return scaleNutrition(recipe.nutrition, factor);
-  });
-  protected readonly macroShares = computed(() => {
-    const recipe = this.recipe();
-    return recipe ? macroEnergyShares(recipe.nutrition) : null;
+    const portion = recipe.nutrition;
+    const total = scaleNutrition(portion, recipe.portions);
+    const shares = macroEnergyShares(portion);
+    return [
+      {
+        label: 'Energy',
+        portion: `${portion.kcal} kcal`,
+        total: `${total.kcal} kcal`,
+        share: null,
+      },
+      {
+        label: 'Protein',
+        portion: `${portion.protein}g`,
+        total: `${total.protein}g`,
+        share: shares.protein,
+      },
+      { label: 'Fat', portion: `${portion.fat}g`, total: `${total.fat}g`, share: shares.fat },
+      {
+        label: 'Carbs',
+        portion: `${portion.carbs}g`,
+        total: `${total.carbs}g`,
+        share: shares.carbs,
+      },
+    ];
   });
 
   protected readonly chefs = computed(() =>

@@ -177,6 +177,19 @@
   }
 }
 
+// Per portion and total share one cell, so toggling does not shift the layout
+.value-stack {
+  display: inline-grid;
+
+  > span {
+    grid-area: 1 / 1;
+  }
+
+  .inactive {
+    visibility: hidden;
+  }
+}
+
 // Own line so the columns keep their width on small screens
 .share {
   display: block;
