@@ -345,27 +345,6 @@
   }
 }
 
-.chef-filter {
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 32px;
-
-  @include mobile {
-    margin-bottom: 24px;
-  }
-}
-
-.step .parallel {
-  margin-top: -16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: $green;
-
-  @include mobile {
-    margin-top: -8px;
-  }
-}
-
 .step-number {
   @include flex-center;
   flex-shrink: 0;
