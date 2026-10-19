@@ -8,6 +8,7 @@ AI-gestützter Rezeptgenerator: Nutzer geben ihre vorhandenen Zutaten und Präfe
 - **Ladeanimation** während der Generierung, **Fehler-Pop-up** bei unzureichenden Zutaten
 - **Rezeptansicht** mit Nährwerten, eigenen und zusätzlichen Zutaten, Arbeitsschritten pro Koch und Like-Funktion (1× pro Browser)
 - **Kochbuch** mit den beliebtesten Rezepten und Kategorien je Küche inkl. Pagination
+- **Impressum** über den Footer auf jeder Seite erreichbar
 - Responsive (Mobile, Desktop, Widescreen ab 1440 px), semantisches HTML, tastaturbedienbar
 
 ## Tech-Stack
@@ -80,8 +81,9 @@ src/app/
 │   ├── home/          # Startseite
 │   ├── generator/     # Zutaten, Präferenzen, Ergebnisse
 │   ├── recipe/        # Rezeptansicht
-│   └── cookbook/      # Kochbuch und Küchen-Listen
-└── shared/components/ # Menüleiste, Loader, Pop-up, Pagination, ...
+│   ├── cookbook/      # Kochbuch und Küchen-Listen
+│   └── imprint/       # Impressum
+└── shared/components/ # Menüleiste, Footer, Loader, Pop-up, Pagination, ...
 public/assets/         # Aus Figma exportierte Bilder und Icons (WebP/SVG)
 n8n/                   # Workflow-Export für n8n
 scripts/               # Seed-Skript für die Realtime Database
