@@ -44,7 +44,8 @@ function isRecipeStep(value: unknown): value is RecipeStep {
     isObject(value) &&
     isString(value['title']) &&
     isString(value['description']) &&
-    isNumber(value['chef'])
+    isNumber(value['chef']) &&
+    (value['parallel'] === undefined || typeof value['parallel'] === 'boolean')
   );
 }
 

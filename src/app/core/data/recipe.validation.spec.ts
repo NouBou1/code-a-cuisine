@@ -14,6 +14,17 @@ describe('isRecipe', () => {
     expect(isRecipe(null)).toBe(false);
     expect(isRecipe({ ...SEED_RECIPES[0], likes: '5' })).toBe(false);
   });
+
+  it('accepts steps with and without the parallel flag, but only as boolean', () => {
+    const [first, ...rest] = SEED_RECIPES[0].steps;
+    const withSteps = (parallel: unknown) => ({
+      ...SEED_RECIPES[0],
+      steps: [first, ...rest.map((step) => ({ ...step, parallel }))],
+    });
+    expect(isRecipe(withSteps(true))).toBe(true);
+    expect(isRecipe(withSteps(undefined))).toBe(true);
+    expect(isRecipe(withSteps('yes'))).toBe(false);
+  });
 });
 
 describe('hasEnoughIngredients', () => {

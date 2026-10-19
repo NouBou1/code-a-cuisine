@@ -84,6 +84,22 @@ export class RecipeDetail {
     return recipe ? macroEnergyShares(recipe.nutrition) : null;
   });
 
+  /** Chef whose steps are shown; `null` shows all. Resets for every recipe. */
+  protected readonly chefFilter = linkedSignal<number | null>(() => {
+    this.recipe();
+    return null;
+  });
+  protected readonly visibleSteps = computed(() => {
+    const filter = this.chefFilter();
+    return (this.recipe()?.steps ?? [])
+      .map((step, index) => ({
+        step,
+        number: index + 1,
+        parallelTo: step.parallel && index > 0 ? index : null,
+      }))
+      .filter(({ step }) => filter === null || step.chef === filter);
+  });
+
   protected readonly chefs = computed(() =>
     Array.from({ length: this.recipe()?.cooks ?? 0 }, (_, i) => i + 1),
   );

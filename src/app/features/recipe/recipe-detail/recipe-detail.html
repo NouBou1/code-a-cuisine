@@ -146,17 +146,42 @@
           <h2 id="directions-title">Directions</h2>
         </app-section-banner>
         <div id="directions-content" class="collapsible" [class.closed]="!directionsOpen()">
+          @if (recipe.cooks > 1) {
+            <div class="scope chef-filter" role="group" aria-label="Show steps of">
+              <button
+                type="button"
+                [attr.aria-pressed]="chefFilter() === null"
+                (click)="chefFilter.set(null)"
+              >
+                All steps
+              </button>
+              @for (chef of chefs(); track chef) {
+                <button
+                  type="button"
+                  [attr.aria-pressed]="chefFilter() === chef"
+                  (click)="chefFilter.set(chef)"
+                >
+                  Chef {{ chef }}
+                </button>
+              }
+            </div>
+          }
           <ol class="steps">
-            @for (step of recipe.steps; track $index; let i = $index) {
-              <li class="step">
+            @for (item of visibleSteps(); track item.number) {
+              <li class="step" [attr.value]="item.number">
                 <div class="step-head">
-                  <span class="step-number" aria-hidden="true">{{ i + 1 }}.</span>
-                  <h3>{{ step.title }}</h3>
+                  <span class="step-number" aria-hidden="true">{{ item.number }}.</span>
+                  <h3>{{ item.step.title }}</h3>
                   @if (recipe.cooks > 1) {
-                    <app-chef-label [chef]="step.chef" />
+                    <app-chef-label [chef]="item.step.chef" />
                   }
                 </div>
-                <p>{{ step.description }}</p>
+                @if (item.parallelTo) {
+                  <p class="parallel">
+                    <span aria-hidden="true">⇄</span> At the same time as step {{ item.parallelTo }}
+                  </p>
+                }
+                <p>{{ item.step.description }}</p>
               </li>
             }
           </ol>

@@ -9,6 +9,8 @@ export interface RecipeStep {
   title: string;
   description: string;
   chef: number;
+  /** Runs at the same time as the previous step; missing in older recipes. */
+  parallel?: boolean;
 }
 
 export interface Nutrition {
