@@ -75,8 +75,9 @@
       ],
       "id": "026c04f3-0213-44f3-9ca8-67f41dca28f8",
       "name": "Send error mail",
-      "notes": "Sends the report via SMTP. Set sender, recipient and SMTP credential after the import.",
-      "notesInFlow": true
+      "notes": "Optional: sends the report via SMTP. Disabled; to use it, enable it and set sender, recipient and SMTP credential.",
+      "notesInFlow": true,
+      "disabled": true
     }
   ],
   "pinData": {},
