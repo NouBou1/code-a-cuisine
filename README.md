@@ -31,12 +31,25 @@ Die App läuft danach auf http://localhost:4200 und spricht direkt mit n8n und d
 
 ### Backend anbinden
 
-In `src/environments/environment.ts` (Produktion) und `environment.development.ts` (Entwicklung):
+Die Environment-Dateien sind nicht im Repo. Vor dem ersten Build `src/environments/environment.example.ts` zweimal kopieren:
+
+- `environment.ts` (Produktion, `production: true`)
+- `environment.development.ts` (Entwicklung, `production: false`)
+
+Darin eintragen:
 
 1. `firebase` – Web-App-Config aus der Firebase-Konsole (Projekteinstellungen → Meine Apps), inklusive `databaseURL`
 2. `n8n.baseUrl` – z. B. `https://n8n.example.com/webhook` (Entwicklung: `/webhook-test`)
 
 Den n8n-Workflow zum Importieren enthält der Ordner [n8n/](n8n/).
+
+### Absicherung der Webhooks
+
+- Die App meldet Besucher bei der ersten n8n-Anfrage anonym bei Firebase Auth an und schickt das ID-Token als `Authorization: Bearer …` mit.
+- n8n prüft das Token in den Nodes „Verify token“ und „Verify quota token“ über die Identity Toolkit API. Fehlt es oder ist es ungültig, antwortet der Workflow mit 401 `UNAUTHORIZED`.
+- Voraussetzungen: In der Firebase-Konsole *Authentication → Anmeldemethode → Anonym* aktivieren. In n8n ein Credential vom Typ *Query Auth* anlegen (Name `key`, Value = Firebase-API-Key) und in beiden Verify-Nodes auswählen.
+- Die Webhooks erlauben per CORS nur die eigene Domain und `localhost:4200`.
+- Nach Änderungen am Workflow in n8n **Publish** klicken, sonst bleibt die alte Version aktiv.
 
 ### Quota (Schutz des Gemini-Kontingents)
 
