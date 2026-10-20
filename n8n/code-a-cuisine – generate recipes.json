@@ -6,7 +6,9 @@
         "httpMethod": "POST",
         "path": "recipes/generate",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "allowedOrigins": "https://code-a-cuisine.n-boussaada.de,http://localhost:4200"
+        }
       },
       "id": "b302da5b-f36c-465b-abb7-4b9568718075",
       "name": "Webhook",
@@ -22,14 +24,14 @@
     },
     {
       "parameters": {
-        "jsCode": "const UNITS = ['gram', 'ml', 'piece'];\nconst TIMES = ['quick', 'medium', 'complex'];\nconst CUISINES = ['italian', 'german', 'japanese', 'gourmet', 'indian', 'fusion'];\nconst DIETS = ['vegetarian', 'vegan', 'keto', 'none'];\nconst MAX_INGREDIENTS = 20;\nconst MAX_NAME_LENGTH = 40;\nconst MAX_AMOUNT = 10000;\nconst MIN_GRAMS_PER_PORTION = 100;\nconst GRAMS_PER_PIECE = 100;\n\nconst body = $input.first().json.body ?? {};\nconst ingredients = body.ingredients;\nconst p = body.preferences ?? {};\n\nconst fail = (status, code, message) => [{ json: { valid: false, status, code, message } }];\nconst isInt = (v, min, max) => Number.isInteger(v) && v >= min && v <= max;\nconst isIngredient = (i) =>\n  i !== null &&\n  typeof i === 'object' &&\n  typeof i.name === 'string' &&\n  i.name.trim().length > 0 &&\n  i.name.length <= MAX_NAME_LENGTH &&\n  typeof i.amount === 'number' &&\n  i.amount > 0 &&\n  i.amount <= MAX_AMOUNT &&\n  UNITS.includes(i.unit);\n\nif (\n  !Array.isArray(ingredients) ||\n  ingredients.length === 0 ||\n  ingredients.length > MAX_INGREDIENTS ||\n  !ingredients.every(isIngredient) ||\n  !isInt(p.portions, 1, 12) ||\n  !isInt(p.cooks, 1, 4) ||\n  !TIMES.includes(p.cookingTime) ||\n  !CUISINES.includes(p.cuisine) ||\n  !DIETS.includes(p.diet)\n) {\n  return fail(400, 'INVALID_INPUT', 'Some of your entries are invalid. Please check your ingredients and preferences.');\n}\n\nconst grams = ingredients.reduce((sum, i) => sum + (i.unit === 'piece' ? i.amount * GRAMS_PER_PIECE : i.amount), 0);\nif (grams < p.portions * MIN_GRAMS_PER_PORTION) {\n  return fail(\n    422,\n    'INSUFFICIENT_INGREDIENTS',\n    'It looks like some ingredient quantities aren’t sufficient for your selected servings. Please add or adjust quantities and try again.',\n  );\n}\n\nreturn [\n  {\n    json: {\n      valid: true,\n      ingredients: ingredients.map(({ name, amount, unit }) => ({ name: name.trim(), amount, unit })),\n      preferences: {\n        portions: p.portions,\n        cooks: p.cooks,\n        cookingTime: p.cookingTime,\n        cuisine: p.cuisine,\n        diet: p.diet,\n      },\n    },\n  },\n];"
+        "jsCode": "const UNITS = ['gram', 'ml', 'piece'];\nconst TIMES = ['quick', 'medium', 'complex'];\nconst CUISINES = ['italian', 'german', 'japanese', 'gourmet', 'indian', 'fusion'];\nconst DIETS = ['vegetarian', 'vegan', 'keto', 'none'];\nconst MAX_INGREDIENTS = 20;\nconst MAX_NAME_LENGTH = 40;\nconst MAX_AMOUNT = 10000;\nconst MIN_GRAMS_PER_PORTION = 100;\nconst GRAMS_PER_PIECE = 100;\n\nconst body = $('Webhook').first().json.body ?? {};\nconst ingredients = body.ingredients;\nconst p = body.preferences ?? {};\n\nconst fail = (status, code, message) => [{ json: { valid: false, status, code, message } }];\nconst isInt = (v, min, max) => Number.isInteger(v) && v >= min && v <= max;\nconst isIngredient = (i) =>\n  i !== null &&\n  typeof i === 'object' &&\n  typeof i.name === 'string' &&\n  i.name.trim().length > 0 &&\n  i.name.length <= MAX_NAME_LENGTH &&\n  typeof i.amount === 'number' &&\n  i.amount > 0 &&\n  i.amount <= MAX_AMOUNT &&\n  UNITS.includes(i.unit);\n\nif (\n  !Array.isArray(ingredients) ||\n  ingredients.length === 0 ||\n  ingredients.length > MAX_INGREDIENTS ||\n  !ingredients.every(isIngredient) ||\n  !isInt(p.portions, 1, 12) ||\n  !isInt(p.cooks, 1, 4) ||\n  !TIMES.includes(p.cookingTime) ||\n  !CUISINES.includes(p.cuisine) ||\n  !DIETS.includes(p.diet)\n) {\n  return fail(400, 'INVALID_INPUT', 'Some of your entries are invalid. Please check your ingredients and preferences.');\n}\n\nconst grams = ingredients.reduce((sum, i) => sum + (i.unit === 'piece' ? i.amount * GRAMS_PER_PIECE : i.amount), 0);\nif (grams < p.portions * MIN_GRAMS_PER_PORTION) {\n  return fail(\n    422,\n    'INSUFFICIENT_INGREDIENTS',\n    'It looks like some ingredient quantities aren’t sufficient for your selected servings. Please add or adjust quantities and try again.',\n  );\n}\n\nreturn [\n  {\n    json: {\n      valid: true,\n      ingredients: ingredients.map(({ name, amount, unit }) => ({ name: name.trim(), amount, unit })),\n      preferences: {\n        portions: p.portions,\n        cooks: p.cooks,\n        cookingTime: p.cookingTime,\n        cuisine: p.cuisine,\n        diet: p.diet,\n      },\n    },\n  },\n];"
       },
       "id": "c2b9a8d5-0c45-45d5-a158-058cacac0ce0",
       "name": "Validate input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1536,
+        -1088,
         400
       ],
       "notes": "Checks ingredients (1-20, name, amount, unit) and preferences again, independent of the frontend. Too little food for the portions -> 422 INSUFFICIENT_INGREDIENTS.",
@@ -65,7 +67,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1328,
+        -880,
         400
       ],
       "notes": "Valid input goes on to the prompt, invalid input is answered right away.",
@@ -84,7 +86,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        -1088,
+        -640,
         688
       ],
       "notes": "Answers with 400 INVALID_INPUT or 422 INSUFFICIENT_INGREDIENTS.",
@@ -99,7 +101,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        16,
+        464,
         400
       ],
       "notes": "Builds the Gemini request: prompt with all recipe rules (70 % of the ingredients, max. 3 extras, beginner friendly) and a JSON response schema.",
@@ -123,7 +125,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        240,
+        688,
         400
       ],
       "retryOnFail": true,
@@ -157,7 +159,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        400,
+        848,
         464
       ],
       "credentials": {
@@ -179,7 +181,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        672,
+        1120,
         384
       ],
       "onError": "continueErrorOutput",
@@ -202,7 +204,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1120,
+        1568,
         384
       ],
       "retryOnFail": true,
@@ -227,7 +229,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1600,
+        2048,
         368
       ],
       "notes": "Combines the saved ids with the recipes and adds the remaining generations of today.",
@@ -242,7 +244,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        1840,
+        2288,
         368
       ],
       "notes": "Answers with 200 and the 3 generated recipes.",
@@ -261,7 +263,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        992,
+        1440,
         688
       ],
       "notes": "Answers with 502 if Gemini or Firebase fail.",
@@ -295,7 +297,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        896,
+        1344,
         384
       ],
       "id": "a691eec8-5469-4b1f-9f06-da8fd2197aee",
@@ -314,7 +316,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        1120,
+        1568,
         560
       ],
       "id": "5a9f654f-1762-487c-8414-1ef7490fcda1",
@@ -329,7 +331,7 @@
       "type": "n8n-nodes-base.stopAndError",
       "typeVersion": 1,
       "position": [
-        1232,
+        1680,
         688
       ],
       "id": "5fa26cbe-606f-4ca7-a8f9-18404e912ca4",
@@ -344,7 +346,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1104,
+        -656,
         400
       ],
       "id": "00386ba6-1567-4d5b-ba5d-2853d8ec06b2",
@@ -362,7 +364,7 @@
       "type": "n8n-nodes-base.crypto",
       "typeVersion": 1,
       "position": [
-        -880,
+        -432,
         400
       ],
       "id": "6a8a88cc-b900-4e85-ae9f-57ebd1a26b97",
@@ -386,7 +388,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -656,
+        -208,
         400
       ],
       "id": "bbb56c6a-44a8-4017-955f-b11564491c99",
@@ -407,7 +409,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -432,
+        16,
         400
       ],
       "id": "8af6bff3-f146-4f49-a1d0-e0feb10382d1",
@@ -443,7 +445,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -208,
+        240,
         400
       ],
       "id": "5a59d4db-ba07-4f39-81dc-0d77b48ea310",
@@ -462,7 +464,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        16,
+        464,
         688
       ],
       "id": "555c8a97-840d-4094-9d2c-678dd09d8bfd",
@@ -484,7 +486,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1344,
+        1792,
         384
       ],
       "id": "f70075c6-6db0-4237-807d-13e97b150989",
@@ -505,7 +507,9 @@
         "httpMethod": "GET",
         "path": "recipes/quota",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "allowedOrigins": "https://code-a-cuisine.n-boussaada.de,http://localhost:4200"
+        }
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
@@ -526,7 +530,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1536,
+        -1088,
         1000
       ],
       "id": "9adf92ee-aeb9-4949-9d09-bda37ec8ba48",
@@ -544,7 +548,7 @@
       "type": "n8n-nodes-base.crypto",
       "typeVersion": 1,
       "position": [
-        -1312,
+        -864,
         1000
       ],
       "id": "16c3bdb9-5453-488a-8026-a97b5a7f0e40",
@@ -568,7 +572,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1088,
+        -640,
         1000
       ],
       "id": "4aaef62a-3d90-46fd-85d0-ed1fddde90cf",
@@ -589,7 +593,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -864,
+        -416,
         1000
       ],
       "id": "5c3ef83f-8de3-4f57-ae66-e340513ed996",
@@ -606,12 +610,100 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        -640,
+        -192,
         1000
       ],
       "id": "f8bd64f3-30c2-486a-b44b-c3dec79e00d9",
       "name": "Respond quota",
       "notes": "Answers with { remaining, limit }.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://identitytoolkit.googleapis.com/v1/accounts:lookup",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ idToken: String($('Webhook').first().json.headers.authorization ?? '').replace(/^Bearer /, '') }) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "fcccdfde-bc4b-48fb-a544-3a0f8ed660e0",
+      "name": "Verify token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1536,
+        400
+      ],
+      "onError": "continueErrorOutput",
+      "notes": "Checks the Firebase ID token from the Authorization header; invalid or missing → error output.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ code: \"UNAUTHORIZED\", message: \"Your session could not be verified. Please reload the page.\" }) }}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "86601658-244c-43b5-8615-6584794dd01f",
+      "name": "Respond unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -1312,
+        592
+      ],
+      "notes": "Answers with 401 UNAUTHORIZED.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://identitytoolkit.googleapis.com/v1/accounts:lookup",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ idToken: String($('Quota webhook').first().json.headers.authorization ?? '').replace(/^Bearer /, '') }) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "9f625c3a-3f9b-4ef0-978d-aeb7fd8bf7fd",
+      "name": "Verify quota token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1536,
+        1000
+      ],
+      "onError": "continueErrorOutput",
+      "notes": "Checks the Firebase ID token from the Authorization header; invalid or missing → error output.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ code: \"UNAUTHORIZED\", message: \"Your session could not be verified. Please reload the page.\" }) }}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "98f17ec0-3fdc-4c12-a381-5d48fee3a3aa",
+      "name": "Respond quota unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -1312,
+        1192
+      ],
+      "notes": "Answers with 401 UNAUTHORIZED.",
       "notesInFlow": true
     }
   ],
@@ -621,7 +713,7 @@
       "main": [
         [
           {
-            "node": "Validate input",
+            "node": "Verify token",
             "type": "main",
             "index": 0
           }
@@ -857,7 +949,7 @@
       "main": [
         [
           {
-            "node": "Identify quota client",
+            "node": "Verify quota token",
             "type": "main",
             "index": 0
           }
@@ -902,6 +994,42 @@
         [
           {
             "node": "Respond quota",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify token": {
+      "main": [
+        [
+          {
+            "node": "Validate input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify quota token": {
+      "main": [
+        [
+          {
+            "node": "Identify quota client",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond quota unauthorized",
             "type": "main",
             "index": 0
           }
