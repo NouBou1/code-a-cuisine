@@ -15,7 +15,7 @@ AI-gestützter Rezeptgenerator: Nutzer geben ihre vorhandenen Zutaten und Präfe
 ## Tech-Stack
 
 - Angular 22 (Standalone-Komponenten, Signals, SCSS)
-- Firebase JS SDK (Realtime Database) – direkt eingebunden, da `@angular/fire` Angular 22 noch nicht unterstützt
+- Firebase JS SDK (Realtime Database, anonyme Anmeldung) – direkt eingebunden, da `@angular/fire` Angular 22 noch nicht unterstützt
 - n8n (selbst gehostet) mit Google Gemini – Kommunikation über Webhooks
 - Schriften lokal über Fontsource (Quicksand, Ubuntu, Mulish) – keine Google-Fonts-Anfragen
 - Vitest für Unit-Tests, TypeDoc für die Dokumentation
@@ -90,11 +90,12 @@ Manuelle Testausführungen lösen den Fehler-Workflow nicht aus.
 ```
 src/app/
 ├── core/
+│   ├── auth/          # Anonyme Anmeldung, ID-Token für n8n
 │   ├── constants/     # Auswahloptionen (Küchen, Kochzeiten, Ernährung)
 │   ├── data/          # RecipeGenerator & CookbookService (n8n/Realtime Database), Seed-Rezepte
-│   ├── firebase/      # Firebase-/Database-Provider
+│   ├── firebase/      # Firebase-, Database- und Auth-Provider
 │   ├── guards/        # Schutz der Generator-Schritte
-│   ├── interceptors/  # Zentrale HTTP-Fehlerbehandlung
+│   ├── interceptors/  # Zentrale HTTP-Fehlerbehandlung, Token für n8n
 │   ├── models/        # Interfaces und Typen
 │   ├── services/      # N8nService, DatabaseService, LikeService
 │   └── state/         # GeneratorStore (Zustand über die Schritte)
@@ -110,7 +111,3 @@ n8n/                   # Workflow-Export für n8n
 scripts/               # Seed-Skript für die Realtime Database
 database.rules.json    # Security Rules und Indizes
 ```
-
-## Commit-Konvention
-
-[Conventional Commits](https://www.conventionalcommits.org/de/): `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `test:`, `chore:`
