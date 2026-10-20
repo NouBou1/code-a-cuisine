@@ -3,6 +3,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
 import { provideFirebase } from './core/firebase/firebase.providers';
 import { provideRecipeData } from './core/data/data.providers';
@@ -15,7 +16,7 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
     ),
-    provideHttpClient(withFetch(), withInterceptors([httpErrorInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([httpErrorInterceptor, authInterceptor])),
     provideFirebase(environment.firebase),
     provideRecipeData(),
   ],
