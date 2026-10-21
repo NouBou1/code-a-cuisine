@@ -8,6 +8,7 @@ import {
 } from '../../../core/constants/options';
 import { CookbookService } from '../../../core/data/cookbook.service';
 import { macroEnergyShares, scaleNutrition } from '../../../core/data/nutrition';
+import { Nutrition } from '../../../core/models/recipe.model';
 import { LikeService } from '../../../core/services/like.service';
 import { GeneratorStore } from '../../../core/state/generator.store';
 import { ChefLabel } from '../../../shared/components/chef-label/chef-label';
@@ -89,25 +90,10 @@ export class RecipeDetail {
     const total = scaleNutrition(portion, recipe.portions);
     const shares = macroEnergyShares(portion);
     return [
-      {
-        label: 'Energy',
-        portion: `${portion.kcal} kcal`,
-        total: `${total.kcal} kcal`,
-        share: null,
-      },
-      {
-        label: 'Protein',
-        portion: `${portion.protein}g`,
-        total: `${total.protein}g`,
-        share: shares.protein,
-      },
-      { label: 'Fat', portion: `${portion.fat}g`, total: `${total.fat}g`, share: shares.fat },
-      {
-        label: 'Carbs',
-        portion: `${portion.carbs}g`,
-        total: `${total.carbs}g`,
-        share: shares.carbs,
-      },
+      nutritionRow('Energy', 'kcal', portion, total, null),
+      nutritionRow('Protein', 'protein', portion, total, shares.protein),
+      nutritionRow('Fat', 'fat', portion, total, shares.fat),
+      nutritionRow('Carbs', 'carbs', portion, total, shares.carbs),
     ];
   });
 
@@ -134,4 +120,24 @@ export class RecipeDetail {
     this.store.reset();
     this.router.navigate(['/generate']);
   }
+}
+
+/**
+ * Builds one row of the nutrition table.
+ * @param label - Row label.
+ * @param key - Nutrition value of the row.
+ * @param portion - Values per portion.
+ * @param total - Values for the whole recipe.
+ * @param share - Energy share in percent, `null` for the energy row.
+ * @returns The row with formatted values.
+ */
+function nutritionRow(
+  label: string,
+  key: keyof Nutrition,
+  portion: Nutrition,
+  total: Nutrition,
+  share: number | null,
+): NutritionRow {
+  const unit = key === 'kcal' ? ' kcal' : 'g';
+  return { label, portion: `${portion[key]}${unit}`, total: `${total[key]}${unit}`, share };
 }
