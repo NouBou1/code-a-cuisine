@@ -42,7 +42,11 @@ export class IngredientsStep {
         Validators.pattern(NAME_PATTERN),
       ],
     ],
-    amount: [100, [Validators.required, Validators.min(0.1), Validators.max(MAX_AMOUNT)]],
+    amount: this.fb.control<number | null>(null, [
+      Validators.required,
+      Validators.min(0.1),
+      Validators.max(MAX_AMOUNT),
+    ]),
     unit: ['gram' as IngredientUnit, Validators.required],
   });
 
@@ -91,9 +95,11 @@ export class IngredientsStep {
   protected add(): void {
     this.submitted.set(true);
     this.closeSuggestions();
-    if (this.form.invalid) return;
-    if (this.store.addIngredient(this.form.getRawValue())) {
+    const { name, amount, unit } = this.form.getRawValue();
+    if (this.form.invalid || amount === null) return;
+    if (this.store.addIngredient({ name, amount, unit })) {
       this.form.controls.name.reset();
+      this.form.controls.amount.reset();
       this.submitted.set(false);
       this.nameInput().nativeElement.focus();
     }
