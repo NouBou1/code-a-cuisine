@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { COOKING_TIME_OPTIONS, CUISINES, DIET_OPTIONS } from '../../../core/constants/options';
 import {
+  ApiError,
   INSUFFICIENT_INGREDIENTS,
   INVALID_CLIENT,
   QUOTA_EXCEEDED,
@@ -28,6 +29,36 @@ interface DialogContent {
   /** Page the action opens; `null` only closes the pop-up. */
   link: string | null;
 }
+
+type DialogKind = 'quota' | 'insufficient' | 'invalid' | 'unknown';
+
+/** Pop-up texts per error kind; `message` is replaced by the backend message if there is one. */
+const DIALOG_TEXTS: Record<DialogKind, DialogContent> = {
+  quota: {
+    title: 'Ups! That’s it for today...',
+    message: '',
+    actionLabel: 'Go to cookbook',
+    link: '/cookbook',
+  },
+  insufficient: {
+    title: 'Ups! Not quite enough...',
+    message: '',
+    actionLabel: 'Go back to ingredients',
+    link: '/generate',
+  },
+  invalid: {
+    title: 'Ups! Something doesn’t fit...',
+    message: '',
+    actionLabel: 'Go back to ingredients',
+    link: '/generate',
+  },
+  unknown: {
+    title: 'Ups! Something went wrong...',
+    message: 'Please try again in a moment.',
+    actionLabel: 'Try again later',
+    link: null,
+  },
+};
 
 /** Generator step 2: choose preferences and start the generation. */
 @Component({
@@ -125,42 +156,20 @@ export class PreferencesStep {
  * @returns Title, message and action.
  */
 function toDialogContent(error: unknown): DialogContent {
-  if (!isApiError(error)) {
-    return {
-      title: 'Ups! Something went wrong...',
-      message: 'Please try again in a moment.',
-      actionLabel: 'Try again later',
-      link: null,
-    };
-  }
-  if (error.code === QUOTA_EXCEEDED) {
-    return {
-      title: 'Ups! That’s it for today...',
-      message: error.message,
-      actionLabel: 'Go to cookbook',
-      link: '/cookbook',
-    };
-  }
-  if (error.code === INSUFFICIENT_INGREDIENTS) {
-    return {
-      title: 'Ups! Not quite enough...',
-      message: error.message,
-      actionLabel: 'Go back to ingredients',
-      link: '/generate',
-    };
-  }
+  if (!isApiError(error)) return DIALOG_TEXTS.unknown;
+  return { ...DIALOG_TEXTS[dialogKind(error)], message: error.message };
+}
+
+/**
+ * Decides which pop-up fits an error.
+ * @param error - Normalized error from n8n or the network.
+ * @returns The key of the pop-up text.
+ */
+function dialogKind(error: ApiError): DialogKind {
+  if (error.code === QUOTA_EXCEEDED) return 'quota';
+  if (error.code === INSUFFICIENT_INGREDIENTS) return 'insufficient';
   if (error.code !== INVALID_CLIENT && (error.status === 400 || error.status === 422)) {
-    return {
-      title: 'Ups! Something doesn’t fit...',
-      message: error.message,
-      actionLabel: 'Go back to ingredients',
-      link: '/generate',
-    };
+    return 'invalid';
   }
-  return {
-    title: 'Ups! Something went wrong...',
-    message: error.message,
-    actionLabel: 'Try again later',
-    link: null,
-  };
+  return 'unknown';
 }
