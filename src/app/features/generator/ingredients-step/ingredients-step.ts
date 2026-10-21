@@ -55,6 +55,15 @@ export class IngredientsStep {
   protected readonly suggestionsOpen = signal(false);
   protected readonly activeSuggestion = signal(-1);
 
+  /** Keyboard actions in the name field; each returns `true` if it handled the key. */
+  private readonly keyActions: Partial<Record<string, () => boolean>> = {
+    ArrowDown: () => this.highlightNext(),
+    ArrowUp: () => this.highlightPrevious(),
+    Enter: () => this.selectHighlighted(),
+    ArrowRight: () => this.acceptCompletion(),
+    Escape: () => this.closeOpenSuggestions(),
+  };
+
   protected readonly suggestions = computed(() => {
     const name = this.name();
     const matches = suggestIngredients(
@@ -118,25 +127,62 @@ export class IngredientsStep {
    * @param event - Keydown on the name field.
    */
   protected onNameKeydown(event: KeyboardEvent): void {
+    const action = this.keyActions[event.key];
+    if (action?.()) event.preventDefault();
+  }
+
+  /**
+   * Highlights the next suggestion and opens the list.
+   * @returns `true` if there was a suggestion.
+   */
+  private highlightNext(): boolean {
     const count = this.suggestions().length;
+    if (!count) return false;
+    this.suggestionsOpen.set(true);
+    this.activeSuggestion.set((this.activeSuggestion() + 1) % count);
+    return true;
+  }
+
+  /**
+   * Highlights the previous suggestion, wrapping to the last one.
+   * @returns `true` if the list was open.
+   */
+  private highlightPrevious(): boolean {
+    if (!this.showSuggestions()) return false;
     const active = this.activeSuggestion();
-    if (event.key === 'ArrowDown' && count) {
-      event.preventDefault();
-      this.suggestionsOpen.set(true);
-      this.activeSuggestion.set((active + 1) % count);
-    } else if (event.key === 'ArrowUp' && this.showSuggestions()) {
-      event.preventDefault();
-      this.activeSuggestion.set(active <= 0 ? count - 1 : active - 1);
-    } else if (event.key === 'Enter' && this.showSuggestions() && active >= 0) {
-      event.preventDefault();
-      this.selectSuggestion(this.suggestions()[active]);
-    } else if (event.key === 'ArrowRight' && this.completion() && this.caretAtEnd()) {
-      event.preventDefault();
-      this.selectSuggestion(this.suggestions()[0]);
-    } else if (event.key === 'Escape' && this.showSuggestions()) {
-      event.preventDefault();
-      this.closeSuggestions();
-    }
+    this.activeSuggestion.set(active <= 0 ? this.suggestions().length - 1 : active - 1);
+    return true;
+  }
+
+  /**
+   * Takes over the highlighted suggestion.
+   * @returns `true` if one was highlighted.
+   */
+  private selectHighlighted(): boolean {
+    const active = this.activeSuggestion();
+    if (!this.showSuggestions() || active < 0) return false;
+    this.selectSuggestion(this.suggestions()[active]);
+    return true;
+  }
+
+  /**
+   * Takes over the inline completion when the caret is at the end.
+   * @returns `true` if a completion was shown.
+   */
+  private acceptCompletion(): boolean {
+    if (!this.completion() || !this.caretAtEnd()) return false;
+    this.selectSuggestion(this.suggestions()[0]);
+    return true;
+  }
+
+  /**
+   * Closes the open suggestion list.
+   * @returns `true` if the list was open.
+   */
+  private closeOpenSuggestions(): boolean {
+    if (!this.showSuggestions()) return false;
+    this.closeSuggestions();
+    return true;
   }
 
   /**
