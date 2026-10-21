@@ -13,7 +13,8 @@ import {
 import { environment } from '../../../environments/environment';
 import { isApiError } from '../models/api-error.model';
 
-const REQUEST_TIMEOUT_MS = 60_000;
+// Above the Gemini timeouts in n8n (50 s + 30 s fallback)
+const REQUEST_TIMEOUT_MS = 90_000;
 const RETRY_COUNT = 1;
 const RETRY_DELAY_MS = 1000;
 
