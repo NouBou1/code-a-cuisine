@@ -117,7 +117,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json.body) }}",
         "options": {
-          "timeout": 20000
+          "timeout": 50000
         }
       },
       "id": "7fd260d0-94e9-42e3-8286-8e7bdb8974fb",
@@ -151,7 +151,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($('Build prompt').first().json.body) }}",
         "options": {
-          "timeout": 15000
+          "timeout": 30000
         }
       },
       "id": "f9c3130e-6d3b-4091-b421-11f817c859b2",
