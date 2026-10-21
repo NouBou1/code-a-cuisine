@@ -7,8 +7,13 @@ import {
 } from '../data/generation.validation';
 import { RecipeGenerator } from '../data/recipe-generator';
 import { isRecipe } from '../data/recipe.validation';
-import { QUOTA_EXCEEDED, RECIPE_RULES_NOT_MET, isApiError } from '../models/api-error.model';
-import { QuotaStatus } from '../models/generation.model';
+import {
+  ApiError,
+  QUOTA_EXCEEDED,
+  RECIPE_RULES_NOT_MET,
+  isApiError,
+} from '../models/api-error.model';
+import { GenerateRecipesRequest, QuotaStatus } from '../models/generation.model';
 import { Ingredient, IngredientUnit } from '../models/ingredient.model';
 import { DEFAULT_PREFERENCES, Preferences } from '../models/preferences.model';
 import { Recipe } from '../models/recipe.model';
@@ -111,25 +116,14 @@ export class GeneratorStore {
    * @returns The generated recipes, or an `ApiError`.
    */
   generate(): Observable<Recipe[]> {
-    const ingredients = this.ingredients().map(({ name, amount, unit }) => ({
-      name,
-      amount,
-      unit,
-    }));
-    const request = { ingredients, preferences: this.preferences() };
-    if (!hasEnoughIngredients(request)) return throwError(insufficientIngredientsError);
-    const quota = this.quota();
-    if (quota && quota.remaining <= 0) return throwError(() => quotaExceededError(quota.limit));
+    const request = this.buildRequest();
+    const blocked = this.checkRequest(request);
+    if (blocked) return throwError(() => blocked);
     return this.generator.generate(request).pipe(
       retry({ count: RULE_RETRY_COUNT, delay: (error) => this.retryOnRuleError(error) }),
       tap({
-        next: (results) => {
-          this.patch({ results });
-          this.updateRemaining((remaining) => remaining - 1);
-        },
-        error: (error: unknown) => {
-          if (isApiError(error) && error.code === QUOTA_EXCEEDED) this.updateRemaining(() => 0);
-        },
+        next: (results) => this.storeResults(results),
+        error: (error: unknown) => this.handleGenerateError(error),
       }),
       finalize(() => this.retryingState.set(false)),
     );
@@ -146,6 +140,48 @@ export class GeneratorStore {
   /** Clears the generator for a new run. */
   reset(): void {
     this.state.set(initialState());
+  }
+
+  /**
+   * Builds the request from the current ingredients and preferences.
+   * @returns The request without ingredient ids.
+   */
+  private buildRequest(): GenerateRecipesRequest {
+    const ingredients = this.ingredients().map(({ name, amount, unit }) => ({
+      name,
+      amount,
+      unit,
+    }));
+    return { ingredients, preferences: this.preferences() };
+  }
+
+  /**
+   * Checks the request before it is sent, so n8n is not called needlessly.
+   * @param request - The generation request.
+   * @returns The `ApiError` that blocks the request, or `null`.
+   */
+  private checkRequest(request: GenerateRecipesRequest): ApiError | null {
+    if (!hasEnoughIngredients(request)) return insufficientIngredientsError();
+    const quota = this.quota();
+    if (quota && quota.remaining <= 0) return quotaExceededError(quota.limit);
+    return null;
+  }
+
+  /**
+   * Stores generated recipes and counts the generation.
+   * @param results - The generated recipes.
+   */
+  private storeResults(results: Recipe[]): void {
+    this.patch({ results });
+    this.updateRemaining((remaining) => remaining - 1);
+  }
+
+  /**
+   * Sets the remaining generations to 0 if n8n reports a used up quota.
+   * @param error - Error of the generation.
+   */
+  private handleGenerateError(error: unknown): void {
+    if (isApiError(error) && error.code === QUOTA_EXCEEDED) this.updateRemaining(() => 0);
   }
 
   /**
