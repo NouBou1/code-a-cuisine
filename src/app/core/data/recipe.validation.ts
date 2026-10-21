@@ -1,5 +1,9 @@
 import { Recipe, RecipeIngredient, RecipeStep } from '../models/recipe.model';
 
+const STRING_FIELDS = ['id', 'title', 'cuisine', 'cookingTime', 'diet'] as const;
+const NUMBER_FIELDS = ['durationMinutes', 'portions', 'cooks', 'likes'] as const;
+const INGREDIENT_FIELDS = ['ingredients', 'extraIngredients'] as const;
+
 /**
  * Checks at runtime whether a value is a valid recipe.
  * @param value - Value from n8n or the Realtime Database.
@@ -9,18 +13,10 @@ export function isRecipe(value: unknown): value is Recipe {
   if (!isObject(value)) return false;
   const r = value as Record<string, unknown>;
   return (
-    isString(r['id']) &&
-    isString(r['title']) &&
-    isString(r['cuisine']) &&
-    isString(r['cookingTime']) &&
-    isString(r['diet']) &&
-    isNumber(r['durationMinutes']) &&
-    isNumber(r['portions']) &&
-    isNumber(r['cooks']) &&
-    isNumber(r['likes']) &&
+    STRING_FIELDS.every((key) => isString(r[key])) &&
+    NUMBER_FIELDS.every((key) => isNumber(r[key])) &&
+    INGREDIENT_FIELDS.every((key) => isArrayOf(r[key], isRecipeIngredient)) &&
     isObject(r['nutrition']) &&
-    isArrayOf(r['ingredients'], isRecipeIngredient) &&
-    isArrayOf(r['extraIngredients'], isRecipeIngredient) &&
     isArrayOf(r['steps'], isRecipeStep)
   );
 }
