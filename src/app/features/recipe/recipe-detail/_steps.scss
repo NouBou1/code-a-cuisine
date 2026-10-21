@@ -1,0 +1,102 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+
+/// Preparation steps per chef, collapsible on mobile.
+@mixin steps-styles {
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 400px));
+    justify-content: center;
+    gap: 40px 64px;
+
+    @include tablet {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    p {
+      font-size: 18px;
+    }
+
+    @include mobile {
+      gap: 16px;
+
+      p {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    @include mobile {
+      gap: 8px;
+    }
+
+    h3 {
+      flex: 1;
+      font-size: 24px;
+      font-weight: 500;
+
+      @include mobile {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .step-number {
+    @include flex-center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: $creme;
+    font-size: 18px;
+
+    @include mobile {
+      font-weight: 600;
+    }
+  }
+
+  // Mobile toggle
+  .toggle {
+    @include button-reset;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid $green;
+    border-radius: $radius-md;
+    font-size: 16px;
+    color: $green;
+
+    @include mobile {
+      display: inline-flex;
+    }
+
+    &[aria-expanded='true'] img {
+      transform: rotate(180deg);
+    }
+  }
+
+  .collapsible {
+    @include mobile {
+      align-self: stretch;
+    }
+  }
+
+  .collapsible.closed {
+    @include mobile {
+      display: none;
+    }
+  }
+}
