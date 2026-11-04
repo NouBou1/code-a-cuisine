@@ -18,6 +18,25 @@
 
   @include mobile {
     font-size: 16px;
+
+    &.editing {
+      flex-wrap: wrap;
+      gap: 8px;
+
+      .details {
+        display: contents;
+      }
+
+      .name {
+        order: 1;
+        flex-basis: 100%;
+        padding-left: 14px;
+      }
+
+      .actions {
+        margin-left: auto;
+      }
+    }
   }
 }
 
