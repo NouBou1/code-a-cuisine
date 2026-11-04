@@ -100,7 +100,7 @@
   scroll-snap-align: start;
 
   @include mobile {
-    flex-basis: 285px;
+    flex-basis: min(285px, 100%);
   }
 }
 
