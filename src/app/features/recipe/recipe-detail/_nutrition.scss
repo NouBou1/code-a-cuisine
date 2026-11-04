@@ -88,6 +88,11 @@
     }
 
     @include mobile {
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      justify-content: space-between;
+      gap: 8px;
+
       dt,
       dd {
         font-size: 18px;
