@@ -1,6 +1,9 @@
 # Code à Cuisine
 
 [![CI](https://github.com/NouBou1/code-a-cuisine/actions/workflows/ci.yml/badge.svg)](https://github.com/NouBou1/code-a-cuisine/actions/workflows/ci.yml)
+[![Docs](https://github.com/NouBou1/code-a-cuisine/actions/workflows/docs.yml/badge.svg)](https://noubou1.github.io/code-a-cuisine/)
+
+**Code-Dokumentation:** [noubou1.github.io/code-a-cuisine](https://noubou1.github.io/code-a-cuisine/)
 
 AI-gestützter Rezeptgenerator: Nutzer geben ihre vorhandenen Zutaten und Präferenzen ein, ein **n8n**-Workflow erzeugt mit **Google Gemini** passende Rezepte und speichert sie in der **Firebase Realtime Database**. Alle Rezepte landen im öffentlichen Kochbuch und können gelikt werden.
 
@@ -84,7 +87,7 @@ Manuelle Testausführungen lösen den Fehler-Workflow nicht aus.
 | `npm start`     | Dev-Server auf http://localhost:4200           |
 | `npm run build` | Produktions-Build nach `dist/`                 |
 | `npm test`      | Unit-Tests (Vitest)                            |
-| `npm run docs`  | Generiert die TSDoc-Dokumentation nach `docs/` |
+| `npm run docs`  | Generiert die TSDoc-Dokumentation nach `docs/` (wird bei jedem Push auf `main` automatisch auf GitHub Pages veröffentlicht) |
 | `npm run seed`  | Spielt die Beispielrezepte in die Datenbank ein |
 
 ## Projektstruktur
