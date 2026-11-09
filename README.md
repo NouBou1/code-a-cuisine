@@ -1,5 +1,7 @@
 # Code à Cuisine
 
+[![CI](https://github.com/NouBou1/code-a-cuisine/actions/workflows/ci.yml/badge.svg)](https://github.com/NouBou1/code-a-cuisine/actions/workflows/ci.yml)
+
 AI-gestützter Rezeptgenerator: Nutzer geben ihre vorhandenen Zutaten und Präferenzen ein, ein **n8n**-Workflow erzeugt mit **Google Gemini** passende Rezepte und speichert sie in der **Firebase Realtime Database**. Alle Rezepte landen im öffentlichen Kochbuch und können gelikt werden.
 
 ## Features
