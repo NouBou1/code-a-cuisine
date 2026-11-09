@@ -52,7 +52,7 @@ Den n8n-Workflow zum Importieren enthält der Ordner [n8n/](n8n/).
 
 - Die App meldet Besucher bei der ersten n8n-Anfrage anonym bei Firebase Auth an und schickt das ID-Token als `Authorization: Bearer …` mit.
 - n8n prüft das Token in den Nodes „Verify token“ und „Verify quota token“ über die Identity Toolkit API. Fehlt es oder ist es ungültig, antwortet der Workflow mit 401 `UNAUTHORIZED`.
-- Voraussetzungen: In der Firebase-Konsole *Authentication → Anmeldemethode → Anonym* aktivieren. In n8n ein Credential vom Typ *Query Auth* anlegen (Name `key`, Value = Firebase-API-Key) und in beiden Verify-Nodes auswählen.
+- Voraussetzungen: In der Firebase-Konsole _Authentication → Anmeldemethode → Anonym_ aktivieren. In n8n ein Credential vom Typ _Query Auth_ anlegen (Name `key`, Value = Firebase-API-Key) und in beiden Verify-Nodes auswählen.
 - Die Webhooks erlauben per CORS nur die eigene Domain und `localhost:4200`.
 - Nach Änderungen am Workflow in n8n **Publish** klicken, sonst bleibt die alte Version aktiv.
 
@@ -69,7 +69,7 @@ Schlägt die Generierung fehl (Gemini oder Firebase), antwortet der Workflow mit
 
 1. `n8n/code-a-cuisine – error handler.json` importieren.
 2. Im Node „Log to Firebase“ das Credential „Firebase Service Account“ auswählen.
-3. Im Generator-Workflow unter *Settings → Error Workflow* den Fehler-Workflow auswählen.
+3. Im Generator-Workflow unter _Settings → Error Workflow_ den Fehler-Workflow auswählen.
 4. Optional: Für eine E-Mail-Benachrichtigung den deaktivierten Node „Send error mail“ aktivieren, ein SMTP-Credential auswählen und die Platzhalter `ERROR_MAIL_FROM@example.com` und `ERROR_MAIL_TO@example.com` ersetzen.
 
 Manuelle Testausführungen lösen den Fehler-Workflow nicht aus.
@@ -82,13 +82,13 @@ Manuelle Testausführungen lösen den Fehler-Workflow nicht aus.
 
 ## Skripte
 
-| Befehl          | Beschreibung                                   |
-| --------------- | ---------------------------------------------- |
-| `npm start`     | Dev-Server auf http://localhost:4200           |
-| `npm run build` | Produktions-Build nach `dist/`                 |
-| `npm test`      | Unit-Tests (Vitest)                            |
+| Befehl          | Beschreibung                                                                                                                |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `npm start`     | Dev-Server auf http://localhost:4200                                                                                        |
+| `npm run build` | Produktions-Build nach `dist/`                                                                                              |
+| `npm test`      | Unit-Tests (Vitest)                                                                                                         |
 | `npm run docs`  | Generiert die TSDoc-Dokumentation nach `docs/` (wird bei jedem Push auf `main` automatisch auf GitHub Pages veröffentlicht) |
-| `npm run seed`  | Spielt die Beispielrezepte in die Datenbank ein |
+| `npm run seed`  | Spielt die Beispielrezepte in die Datenbank ein                                                                             |
 
 ## Projektstruktur
 

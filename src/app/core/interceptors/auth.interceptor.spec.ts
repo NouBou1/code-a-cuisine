@@ -29,10 +29,12 @@ describe('authInterceptor', () => {
   it('adds the ID token to n8n requests', async () => {
     const url = `${environment.n8n.baseUrl}/recipes/quota`;
     const response = firstValueFrom(http.get(url));
-    await vi.waitFor(() => controller.expectOne(url)).then((req) => {
-      expect(req.request.headers.get('Authorization')).toBe('Bearer token');
-      req.flush({});
-    });
+    await vi
+      .waitFor(() => controller.expectOne(url))
+      .then((req) => {
+        expect(req.request.headers.get('Authorization')).toBe('Bearer token');
+        req.flush({});
+      });
     await response;
   });
 

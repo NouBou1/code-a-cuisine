@@ -7,6 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "docs": "typedoc",
     "seed": "node --no-warnings scripts/seed-database.mjs"
   },
